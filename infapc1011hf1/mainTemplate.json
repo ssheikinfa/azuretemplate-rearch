@@ -270,14 +270,13 @@
         "nsgUri": "[concat(variables('baseuri'), 'networksecuritygroup.json')]",
         "dbUri": "[concat(variables('baseuri'), parameters('dbType'),'.json')]",
 
-        "nodeUriList": [
-            "node",
-            "node",
-            "nodemulti"
-        ],
+        "nodeUriList": {
+            "False": "node",
+            "True": "nodemulti"
+        },
 
         "nodeVMCountInt": "[int(parameters('nodeVMCount'))]",
-        "nodeIndex": "[add(mod(add(sub(variables('nodeVMCountInt'),2),sub(variables('nodeVMCountInt'),1)),2),1)]",
+        "nodeIndex": "[greaterOrEquals(variables('nodeVMCountInt'), 2)]",
         "nodeVMUri": "[concat(variables('baseuri'), variables('nodeUriList')[variables('nodeIndex')], parameters('nodeVMOS'), parameters('nodeVMAuthType'), '.json')]",
 
         "infaNodeNamePrefix": "node",
