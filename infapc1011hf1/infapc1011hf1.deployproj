@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>d9d94707-a56b-45c3-a57e-a7f1d0183bd7</ProjectGuid>
+    <ProjectGuid>1fc8aefa-5d2d-4d11-86d7-9d86d2d7d5c9</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup>
     <TargetFrameworkIdentifier>Deployment</TargetFrameworkIdentifier>
@@ -26,8 +26,9 @@
   <!-- vertag<:>end -->
   <ItemGroup>
     <None Include="azuredeploy.parameters.json" />
-    <None Include="databaseconfiguration.ps1" />
+    <None Include="CaptureAzureImage.ps1" />
     <None Include="createUiDefinition.json" />
+    <None Include="databaseconfiguration.ps1" />
     <None Include="Deployment.targets">
       <Visible>False</Visible>
     </None>

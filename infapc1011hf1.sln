@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "infapc1011hf1", "infapc1011hf1\infapc1011hf1.deployproj", "{D9D94707-A56B-45C3-A57E-A7F1D0183BD7}"
+Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "infapc1011hf1", "infapc1011hf1\infapc1011hf1.deployproj", "{1FC8AEFA-5D2D-4D11-86D7-9D86D2D7D5C9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D9D94707-A56B-45C3-A57E-A7F1D0183BD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D9D94707-A56B-45C3-A57E-A7F1D0183BD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D9D94707-A56B-45C3-A57E-A7F1D0183BD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D9D94707-A56B-45C3-A57E-A7F1D0183BD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FC8AEFA-5D2D-4D11-86D7-9D86D2D7D5C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FC8AEFA-5D2D-4D11-86D7-9D86D2D7D5C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FC8AEFA-5D2D-4D11-86D7-9D86D2D7D5C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FC8AEFA-5D2D-4D11-86D7-9D86D2D7D5C9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

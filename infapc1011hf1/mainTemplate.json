@@ -277,7 +277,7 @@
 
         "nodeVMCountInt": "[int(parameters('nodeVMCount'))]",
         "nodeIndex": "[greaterOrEquals(variables('nodeVMCountInt'), 2)]",
-        "nodeVMUri": "[concat(variables('baseuri'), variables('nodeUriList')[variables('nodeIndex')], parameters('nodeVMOS'), parameters('nodeVMAuthType'), '.json')]",
+        "nodeVMUri": "[concat(variables('baseuri'), variables('nodeUriList')[string(variables('nodeIndex'))], parameters('nodeVMOS'), parameters('nodeVMAuthType'), '.json')]",
 
         "infaNodeNamePrefix": "node",
 
