@@ -1,0 +1,81 @@
+﻿{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "type": "string"
+        },
+        "nsgName": {
+            "type": "string"
+        },
+        "informaticaTags": {
+            "type": "object" 
+        }
+    },
+    "variables": {
+    },
+    "resources": [
+        {
+            "apiVersion": "2016-10-01",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "name": "[parameters('nsgName')]",
+            "location": "[parameters('location')]",
+            "tags": {
+                "displayName": "NetworkSecurityGroup",
+                "provider": "[toUpper(parameters('informaticaTags').provider)]"
+            },
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "InformaticaService",
+                        "properties": {
+                            "description": "Enabling ports required for Informatica.",
+                            "protocol": "TCP",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "6005-6008",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 100,
+                            "direction": "Inbound"
+                        }
+                    },
+                    {
+                        "name": "SSH",
+                        "properties": {
+                            "description": "Enabling port for SSH",
+                            "protocol": "TCP",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "22",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 110,
+                            "direction": "Inbound"
+                        }
+                    },
+                    {
+                        "name": "RDP",
+                        "properties": {
+                            "description": "Enabling port for RDP",
+                            "protocol": "TCP",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "3389",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 111,
+                            "direction": "Inbound"
+                        }
+                    }
+                ]
+            }
+        }
+    ],
+    "outputs": {
+        "nsgId": {
+            "value": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('nsgName'))]",
+            "type": "string"
+        }
+    }
+}

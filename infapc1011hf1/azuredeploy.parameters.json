@@ -1,0 +1,66 @@
+﻿{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "dbVMAdminUsername": {
+            "value": "azureuser"
+        },
+        "dbVMAdminPassword": {
+            "value": "tempBG@2008isp"
+        },
+        "storageName": {
+            "value": "testnewprod04"
+        },
+        "vnetAddressPrefix": {
+            "value": "10.0.0.0/16"
+        },
+        "subnetPrefix": {
+            "value": "10.0.0.0/24"
+        },
+        "dbUser": {
+            "value": "user1"
+        },
+        "dbPassword": {
+            "value": "tempBG@2008isp"
+        },
+        "nodeVMAdminPassword": {
+            "value": "tempBG@2008isp"
+        },
+        "infaDomainPassword": {
+            "value": "tempBG@2008isp"
+        },
+        "infaKeyword": {
+            "value": "tempBG@2008isp"
+        },
+        "infaDomainLicense": {
+            "value": "nolicense"
+        },
+        "location": {
+            "value": "southeastasia"
+        },
+        "nodeVMOS": {
+            "value": "linux"
+        },
+        "nodeVMCount": {
+            "value": "1"
+        },
+        "dbVMName": {
+            "value": "dvm"
+        },
+        "nodeVMNamePrefix": {
+            "value": "nvm"
+        },
+        "storageExistingOrNew": {
+            "value": "new"
+        },
+        "existingStorageRG": {
+            "value": ""
+        },
+        "dbName": {
+            "value": "testdb"
+        },
+        "baseUrl": {
+            "value": "https://raw.githubusercontent.com/vijayanand17/infapc10.1.1/1011HF1"
+        }
+    }
+}

@@ -1,0 +1,550 @@
+﻿{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "type": "string"
+        },
+        "storageExistingOrNew": {
+            "type": "string",
+            "allowedValues": [
+                "existing",
+                "new"
+            ],
+            "defaultValue": "new",
+            "metadata": {
+                "description": "Storage new or existing"
+            }
+        },
+        "existingStorageRG": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Existing storage resource group name"
+            }
+        },
+        "storageName": {
+            "type": "string",
+            "defaultValue": "infastorage",
+            "metadata": {
+                "description": "Storage name"
+            }
+        },
+        "storageType": {
+            "type": "string",
+            "defaultValue": "Standard_LRS",
+            "metadata": {
+                "description": "Storage type"
+            }
+        },
+        "vnetExistingOrNew": {
+            "type": "string",
+            "allowedValues": [
+                "existing",
+                "new"
+            ],
+            "defaultValue": "new",
+            "metadata": {
+                "description": "VNET new or existing"
+            }
+        },
+        "existingVnetRG": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Existing VNET resource group name"
+            }
+        },
+        "vnetName": {
+            "type": "string",
+            "defaultValue": "infavnet",
+            "metadata": {
+                "description": "VNET name"
+            }
+        },
+        "vnetAddressPrefix": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "VNET address prefix"
+            }
+        },
+        "subnetName": {
+            "type": "string",
+            "defaultValue": "infasubnet",
+            "metadata": {
+                "description": "Subnet name"
+            }
+        },
+        "subnetPrefix": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Subnet address prefix"
+            }
+        },
+        "dbType": {
+            "type": "string",
+            "allowedValues": [
+                "sqlserver",
+                "sqlserverazure"
+            ],
+            "defaultValue": "sqlserver",
+            "metadata": {
+                "description": "Database type. Only SQL Server 2014 on VM is supported for now"
+            }
+        },
+        "dbVMName": {
+            "type": "string",
+            "defaultValue": "DVM",
+            "metadata": {
+                "description": "Database VM name"
+            }
+        },
+        "dbVMAdminUsername": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Database VM username"
+            }
+        },
+        "dbVMAdminPassword": {
+            "type": "securestring",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Database VM password"
+            }
+        },
+        "dbVMSize": {
+            "type": "string",
+            "defaultValue": "Standard_D3",
+            "metadata": {
+                "description": "Database VM size"
+            }
+        },
+        "dbUser": {
+            "type": "string",
+            "defaultValue": "user1",
+            "metadata": {
+                "description": "Database user for Informatica domain"
+            }
+        },
+        "dbPassword": {
+            "type": "securestring",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Database user password for Informatica domain"
+            }
+        },
+        "dbName": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Database name for Informatica domain"
+            }
+        },
+        "nodeVMSize": {
+            "type": "string",
+            "defaultValue": "Standard_D11",
+            "metadata": {
+                "description": "Node VM size"
+            }
+        },
+        "nodeVMAuthType": {
+            "type": "string",
+            "defaultValue": "password",
+            "metadata": {
+                "description": "Node VM authenication type"
+            }
+        },
+        "nodeVMOS": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Node VM OS"
+            }
+        },
+        "nodeVMAdminUsername": {
+            "type": "string",
+            "minLength": 1,
+            "defaultValue": "azureuser",
+            "metadata": {
+                "description": "Node VM username"
+            }
+        },
+        "nodeVMAdminPassword": {
+            "type": "securestring",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Node VM password"
+            }
+        },
+        "nodeVMAdminSshPublicKey": {
+            "type": "securestring",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Node VM sshPublicKey"
+            }
+        },
+        "nodeVMNamePrefix": {
+            "type": "string",
+            "minLength": 1,
+            "defaultValue": "NVM",
+            "metadata": {
+                "description": "Node VM name prefix"
+            }
+        },
+        "nodeVMCount": {
+            "type": "string",
+            "defaultValue": "2",
+            "metadata": {
+                "description": "Node VM count"
+            }
+        },
+        "infaVersion": {
+            "type": "string",
+            "defaultValue": "1011",
+            "metadata": {
+                "description": "Informatica version"
+            }
+        },
+        "infaDomainName": {
+            "type": "string",
+            "minLength": 4,
+            "defaultValue": "InfaAzureDomain",
+            "metadata": {
+                "description": "Informatica domain name"
+            }
+        },
+        "infaDomainUser": {
+            "type": "string",
+            "minLength": 4,
+            "defaultValue": "Administrator",
+            "metadata": {
+                "description": "Informatica domain username"
+            }
+        },
+        "infaDomainPassword": {
+            "type": "securestring",
+            "minLength": 4,
+            "defaultValue": "Administrator",
+            "metadata": {
+                "description": "Informatica domain password"
+            }
+        },
+        "infaKeyword": {
+            "type": "securestring",
+            "minLength": 4,
+            "defaultValue": "",
+            "metadata": {
+                "description": "Informatica domain encryption key keyphrase"
+            }
+        },
+        "infaDomainLicense": {
+            "type": "securestring",
+            "defaultValue": "nolicense",
+            "metadata": {
+                "description": "Informatica domain license key file url"
+            }
+        },
+        "baseUrl": {
+            "type": "string",
+            "metadata": {
+                "description": "Base URL for Marketplace",
+                "artifactsBaseUrl": "https://raw.githubusercontent.com/vijayanand17/infapc10.1.1/master"
+            },
+            "defaultValue": "https://raw.githubusercontent.com/vijayanand17/infapc10.1.1/master"
+        },
+        "informaticaTags": {
+            "type": "object",
+            "defaultValue": {
+                "provider": "AACF690D-C725-4C78-9B1E-E586595B369F"
+            }
+        }
+    },
+    "variables": {
+        "baseUri": "[concat(parameters('baseUrl'), '/')]",
+
+        "storageUri": "[concat(variables('baseuri'), 'storage', parameters('storageExistingOrNew'),'.json')]",
+        "vnetUri": "[concat(variables('baseuri'), 'vnet', parameters('vnetExistingOrNew'),'.json')]",
+        "nsgUri": "[concat(variables('baseuri'), 'networksecuritygroup.json')]",
+        "dbUri": "[concat(variables('baseuri'), parameters('dbType'),'.json')]",
+
+        "nodeUriList": [
+            "node",
+            "node",
+            "nodemulti"
+        ],
+
+        "nodeVMCountInt": "[int(parameters('nodeVMCount'))]",
+        "nodeIndex": "[add(mod(add(sub(variables('nodeVMCountInt'),2),sub(variables('nodeVMCountInt'),1)),2),1)]",
+        "nodeVMUri": "[concat(variables('baseuri'), variables('nodeUriList')[variables('nodeIndex')], parameters('nodeVMOS'), parameters('nodeVMAuthType'), '.json')]",
+
+        "infaNodeNamePrefix": "node",
+
+        "vnetIDs": {
+            "existing": "[resourceId(parameters('existingVnetRG'), 'Microsoft.Network/virtualNetworks', parameters('vnetName'))]",
+            "new": "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
+        },
+        "vnetID": "[variables('vnetIDs')[parameters('vnetExistingOrNew')]]",
+        "subnetID": "[concat(variables('vnetID'), '/subnets/', parameters('subnetName'))]",
+
+        "storageIDs": {
+            "existing": "[resourceId(parameters('existingStorageRG'), 'Microsoft.Storage/storageAccounts', parameters('storageName'))]",
+            "new": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageName'))]"
+        },
+        "storageID": "[variables('storageIDs')[parameters('storageExistingOrNew')]]",
+
+        "nsgName": "NetworkSecurityGroup"
+    },
+    "resources": [
+        {
+            "name": "storageSetup",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2016-09-01",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('storageUri')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "location": {
+                        "value": "[parameters('location')]"
+                    },
+                    "storageName": {
+                        "value": "[parameters('storageName')]"
+                    },
+                    "storageType": {
+                        "value": "[parameters('storageType')]"
+                    },
+                    "existingStorageRG": {
+                        "value": "[parameters('existingStorageRG')]"
+                    },
+                    "informaticaTags": { 
+                        "value": "[parameters('informaticaTags')]"
+                    }
+                }
+            }
+        },
+        {
+            "name": "vnetSetup",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2016-09-01",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('vnetUri')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "location": {
+                        "value": "[parameters('location')]"
+                    },
+                    "vnetName": {
+                        "value": "[parameters('vnetName')]"
+                    },
+                    "vnetAddressPrefix": {
+                        "value": "[parameters('vnetAddressPrefix')]"
+                    },
+                    "subnetName": {
+                        "value": "[parameters('subnetName')]"
+                    },
+                    "subnetPrefix": {
+                        "value": "[parameters('subnetPrefix')]"
+                    },
+                    "existingVnetRG": {
+                        "value": "[parameters('existingVnetRG')]"
+                    },
+                    "informaticaTags": { 
+                        "value": "[parameters('informaticaTags')]"
+                    }
+                }
+            }
+        },
+        {
+            "name": "nsgSetup",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2016-09-01",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('nsgUri')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "location": {
+                        "value": "[parameters('location')]"
+                    },
+                    "nsgName": {
+                        "value": "[variables('nsgName')]"
+                    },
+                    "informaticaTags": { 
+                        "value": "[parameters('informaticaTags')]"
+                    }
+                }
+            }
+        },
+        {
+            "name": "databaseSetup",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2016-09-01",
+            "dependsOn": [
+                "Microsoft.Resources/deployments/storageSetup",
+                "Microsoft.Resources/deployments/vnetSetup",
+                "Microsoft.Resources/deployments/nsgSetup"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('dbUri')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "location": {
+                        "value": "[parameters('location')]"
+                    },
+                    "storageName": {
+                        "value": "[parameters('storageName')]"
+                    },
+                    "dbVMName": {
+                        "value": "[parameters('dbVMName')]"
+                    },
+                    "dbVMAdminUsername": {
+                        "value": "[parameters('dbVMAdminUsername')]"
+                    },
+                    "dbVMAdminPassword": {
+                        "value": "[parameters('dbVMAdminPassword')]"
+                    },
+                    "dbVMSize": {
+                        "value": "[parameters('dbVMSize')]"
+                    },
+                    "dbUser": {
+                        "value": "[parameters('dbUser')]"
+                    },
+                    "dbPassword": {
+                        "value": "[parameters('dbPassword')]"
+                    },
+                    "dbName": {
+                        "value": "[parameters('dbName')]"
+                    },
+                    "vnetName": {
+                        "value": "[parameters('vnetName')]"
+                    },
+                    "subnetName": {
+                        "value": "[parameters('subnetName')]"
+                    },
+                    "subnetID": {
+                        "value": "[variables('subnetID')]"
+                    },
+                    "nsgName": {
+                        "value": "[variables('nsgName')]"
+                    },
+                    "baseUrl": {
+                        "value": "[variables('baseUri')]"
+                    },
+                    "informaticaTags": { 
+                        "value": "[parameters('informaticaTags')]"
+                    }
+                }
+            }
+        },
+        {
+            "name": "nodesSetup",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2016-09-01",
+            "dependsOn": [
+                "Microsoft.Resources/deployments/databaseSetup"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('nodeVMUri')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "location": {
+                        "value": "[parameters('location')]"
+                    },
+                    "storageName": {
+                        "value": "[parameters('storageName')]"
+                    },
+                    "storageID": {
+                        "value": "[variables('storageID')]"
+                    },
+                    "vnetName": {
+                        "value": "[parameters('vnetName')]"
+                    },
+                    "subnetName": {
+                        "value": "[parameters('subnetName')]"
+                    },
+                    "subnetId": {
+                        "value": "[variables('subnetID')]"
+                    },
+                    "nsgName": {
+                        "value": "[variables('nsgName')]"
+                    },
+                    "dbVMName": {
+                        "value": "[parameters('dbVMName')]"
+                    },
+                    "dbUser": {
+                        "value": "[parameters('dbUser')]"
+                    },
+                    "dbPassword": {
+                        "value": "[parameters('dbPassword')]"
+                    },
+                    "dbName": {
+                        "value": "[parameters('dbName')]"
+                    },
+                    "nodeVMSize": {
+                        "value": "[parameters('nodeVMSize')]"
+                    },
+                    "nodeVMOSType": {
+                        "value": "[parameters('nodeVMOS')]"
+                    },
+                    "nodeVMAdminUsername": {
+                        "value": "[parameters('nodeVMAdminUsername')]"
+                    },
+                    "nodeVMAdminPassword": {
+                        "value": "[parameters('nodeVMAdminPassword')]"
+                    },
+                    "nodeVMAdminSshPublicKey": {
+                        "value": "[parameters('nodeVMAdminSshPublicKey')]"
+                    },
+                    "nodeVMNamePrefix": {
+                        "value": "[parameters('nodeVMNamePrefix')]"
+                    },
+                    "nodeVMCount": {
+                        "value": "[variables('nodeVMCountInt')]"
+                    },
+                    "infaDomainName": {
+                        "value": "[parameters('infaDomainName')]"
+                    },
+                    "infaDomainUser": {
+                        "value": "[parameters('infaDomainUser')]"
+                    },
+                    "infaDomainPassword": {
+                        "value": "[parameters('infaDomainPassword')]"
+                    },
+                    "infaNodeNamePrefix": {
+                        "value": "[variables('infaNodeNamePrefix')]"
+                    },
+                    "infaKeyword": {
+                        "value": "[parameters('infaKeyword')]"
+                    },
+                    "infaDomainLicense": {
+                        "value": "[parameters('infaDomainLicense')]"
+                    },
+                    "baseUrl": {
+                        "value": "[variables('baseUri')]"
+                    },
+                    "informaticaTags": { 
+                        "value": "[parameters('informaticaTags')]"
+                    }
+                }
+            }
+        }
+    ],
+    "outputs": {
+    }
+}
