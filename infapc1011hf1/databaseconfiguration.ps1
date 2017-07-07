@@ -7,7 +7,7 @@
 )
 
 #Debug
-echo $osUsername $osPassword $dbUsername $dbPassword $dbName
+#echo $osUsername $osPassword $dbUsername $dbPassword $dbName
 
 Enable-PSRemoting -Force
 $credential = New-Object System.Management.Automation.PSCredential @(($env:COMPUTERNAME + "\" + $osUsername), (ConvertTo-SecureString -String $osPassword -AsPlainText -Force))
@@ -45,7 +45,7 @@ Invoke-Command -Credential $credential -ComputerName $env:COMPUTERNAME -Argument
 
         if ($sqlConn.State -eq 'Open') {
 	        $sqlConn.Close();
-	        writeLog "Connection to MSSQL Server succeed"
+	        writeLog "Connection to MSSQL Server succeeded"
         } else {
             writeLog "Connection to MSSQL Server failed"
             exit 255
