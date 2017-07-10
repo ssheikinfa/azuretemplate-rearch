@@ -138,7 +138,6 @@
         },
         "dbName": {
             "type": "string",
-            "defaultValue": "",
             "metadata": {
                 "description": "Database name for Informatica domain"
             }

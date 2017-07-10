@@ -539,6 +539,7 @@
             "dbVMName": "[steps('databaseConfiguration').databaseconfig.databaseName]",
             "dbVMSize": "[steps('databaseConfiguration').databaseconfig.databaseVMSize]",
             "dbType": "[steps('databaseConfiguration').databaseconfig.databaseType]",
+            "dbName": "[steps('databaseConfiguration').databaseconfig.dbName]",
             "dbVMAdminUsername": "[steps('databaseConfiguration').databaseconfig.dbVMAdminUsername]",
             "dbVMAdminPassword": "[steps('databaseConfiguration').databaseconfig.dbVMAdminPassword.password]",
             "dbUser": "[steps('databaseConfiguration').databaseuser.infaDomainDBUser]",
