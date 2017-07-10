@@ -379,10 +379,10 @@
                                 "name": "dbName",
                                 "type": "Microsoft.Common.TextBox",
                                 "label": "Database name",
+                                "defaultValue": "infadb",
                                 "toolTip": {
                                     "password": "Name for the database"
                                 },
-                                "osPlatform": "Windows",
                                 "constraints": {
                                     "required": true,
                                     "regex": "^([a-zA-Z][a-z0-9A-Z]{2,30})$",
