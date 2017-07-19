@@ -118,11 +118,6 @@
             "dependsOn": [
                 "[concat('Microsoft.Network/networkInterfaces/', variables('dbVMNicName'))]"
             ],
-            /*"plan": {
-                "name": "[variables('osVersion')]",
-                "publisher": "[variables('imagePublisher')]",
-                "product": "[variables('imageOffer')]"
-            },*/
             "tags": {
                 "displayName": "dbvm",
                 "provider": "[toUpper(parameters('informaticaTags').provider)]"
