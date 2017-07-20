@@ -187,7 +187,7 @@
 					"apiVersion": "2015-06-15",
 					"type": "Microsoft.Compute/virtualMachines/extensions",
 					"name": "[concat(parameters('dbVMName'), '/SqlIaasExtension')]",
-					"location": "[resourceGroup().location]",
+					"location": "[parameters('location')]",
 					"dependsOn": [
                         "[concat('Microsoft.Compute/virtualMachines/', parameters('dbVMName'))]",
                         "ScriptExtDB"
@@ -199,7 +199,7 @@
 						"autoUpgradeMinorVersion": true,
 						"settings": {
 							"AutoTelemetrySettings": {
-								"Region": "[resourceGroup().location]"
+								"Region": "[parameters('location')]"
 							},
 							"KeyVaultCredentialSettings": {
 								"Enable": false,
