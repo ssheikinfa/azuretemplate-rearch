@@ -552,7 +552,7 @@
                                 "constraints": {
                                     "required": true
                                 },
-								"visible": "[equals(steps('databaseExistingConfig').databaseType, 'db2')]"
+								"visible": "[equals(steps('databaseConfiguration').databaseExistingConfig.databaseType, 'db2')]"
                             },
                             {
                                 "name": "infaDomainDBUser",
