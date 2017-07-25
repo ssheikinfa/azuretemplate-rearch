@@ -353,18 +353,18 @@
                                     "allowedValues": [
                                         {
                                             "label": "SQL Server 2014",
-                                            "value": "sqlserver"
+                                            "value": "sqlserver2014"
                                         },
-                                         {
+                                        {
                                             "label": "SQL Server 2016",
-                                            "value": "sqlserver"
+                                            "value": "sqlserver2016"
                                         }
                                     ]
                                 },
                                 "visible": true
                             },
                             {
-                                "name": "databaseName",
+                                "name": "databaseHostName",
                                 "type": "Microsoft.Common.TextBox",
                                 "label": "Database machine name",
                                 "defaultValue": "DVM",
@@ -400,7 +400,7 @@
                                 }
                             },
                             {
-                                "name": "dbName",
+                                "name": "databaseName",
                                 "type": "Microsoft.Common.TextBox",
                                 "label": "Database name",
                                 "defaultValue": "infadb",
@@ -486,7 +486,98 @@
                                     "hideConfirmation": false
                                 }
                             }
-                        ]
+                        ],
+                        "visible": "[equals(steps('databaseConfiguration').databaseNewOrExisting, 'new')]"
+                    },
+                    {
+                        "name": "databaseExistingConfig",
+                        "type": "Microsoft.Common.Section",
+                        "label": "Database configuration",
+                        "elements": [
+                            {
+                                "name": "databaseType",
+                                "type": "Microsoft.Common.DropDown",
+                                "label": "Database type",
+                                "defaultValue": "SQL Server 2014",
+                                "constraints": {
+                                    "allowedValues": [
+                                        {
+                                            "label": "SQL Server",
+                                            "value": "sqlserver"
+                                        },
+                                        {
+                                            "label": "Oracle",
+                                            "value": "oracle"
+                                        },
+										{
+                                            "label": "DB2",
+                                            "value": "db2"
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "name": "databaseHostName",
+                                "type": "Microsoft.Common.TextBox",
+                                "label": "Database machine name",
+                                "defaultValue": "DVM",
+                                "constraints": {
+                                    "required": true
+                                }
+                            },
+							{
+                                "name": "databasePort",
+                                "type": "Microsoft.Common.TextBox",
+                                "label": "Database port",
+                                "constraints": {
+                                    "required": true
+                                }
+                            },
+							{
+                                "name": "databaseName",
+                                "type": "Microsoft.Common.TextBox",
+                                "label": "Database name",
+                                "defaultValue": "infadb",
+                                "toolTip": "Name for the database",
+                                "constraints": {
+                                    "required": true
+                                }
+                            },
+							{
+                                "name": "databaseTablespace",
+                                "type": "Microsoft.Common.TextBox",
+                                "label": "Database name",
+                                "defaultValue": "infadb",
+                                "toolTip": "Name for the database",
+                                "constraints": {
+                                    "required": true
+                                },
+								"visible": "[equals(steps('databaseExistingConfig').databaseType, 'db2')]"
+                            },
+                            {
+                                "name": "infaDomainDBUser",
+                                "type": "Microsoft.Common.TextBox",
+                                "label": "Informatica domain DB user",
+                                "constraints": {
+                                    "required": true
+                                }
+                            },
+                            {
+                                "name": "infaDomainDBPassword",
+                                "type": "Microsoft.Common.PasswordBox",
+                                "label": {
+                                    "password": "Informatica domain DB password",
+                                    "confirmPassword": "Confirm Informatica domain DB password"
+                                },
+                                "constraints": {
+                                    "required": true
+                                },
+                                "options": {
+                                    "hideConfirmation": true
+                                }
+                            }
+                        ],
+                        "visible": "[equals(steps('databaseConfiguration').databaseNewOrExisting, 'existing')]"
                     }
                 ]
             },
@@ -561,10 +652,10 @@
             "infaDomainPassword": "[steps('infaDomainConfiguration').infaDomainPassword]",
             "infaDomainLicense": "[steps('infaDomainConfiguration').infaDomainLicense]",
             "infaKeyword": "[steps('infaDomainConfiguration').infaDomainEncryptionKeyword]",
-            "dbVMName": "[steps('databaseConfiguration').databaseConfig.databaseName]",
+            "dbVMName": "[steps('databaseConfiguration').databaseConfig.databaseHostName]",
             "dbVMSize": "[steps('databaseConfiguration').databaseConfig.databaseVMSize]",
             "dbType": "[steps('databaseConfiguration').databaseConfig.databaseType]",
-            "dbName": "[steps('databaseConfiguration').databaseConfig.dbName]",
+            "dbName": "[steps('databaseConfiguration').databaseConfig.databaseName]",
             "dbVMAdminUsername": "[steps('databaseConfiguration').databaseConfig.dbVMAdminUsername]",
             "dbVMAdminPassword": "[steps('databaseConfiguration').databaseConfig.dbVMAdminPassword.password]",
             "dbUser": "[steps('databaseConfiguration').databaseUser.infaDomainDBUser]",
