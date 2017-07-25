@@ -493,10 +493,10 @@
                         "label": "Database configuration",
                         "elements": [
                             {
-                                "name": "databaseType",
+                                "name": "databaseExistingType",
                                 "type": "Microsoft.Common.DropDown",
                                 "label": "Database type",
-                                "defaultValue": "SQL Server 2014",
+                                "defaultValue": "SQL Server",
                                 "constraints": {
                                     "allowedValues": [
                                         {
@@ -515,7 +515,7 @@
                                 }
                             },
                             {
-                                "name": "databaseHostName",
+                                "name": "databaseExistingHostName",
                                 "type": "Microsoft.Common.TextBox",
                                 "label": "Database machine name",
                                 "defaultValue": "DVM",
@@ -524,7 +524,7 @@
                                 }
                             },
 							{
-                                "name": "databasePort",
+                                "name": "databaseExistingPort",
                                 "type": "Microsoft.Common.TextBox",
                                 "label": "Database port",
                                 "constraints": {
@@ -532,16 +532,15 @@
                                 }
                             },
 							{
-                                "name": "databaseName",
+                                "name": "databaseExistingName",
                                 "type": "Microsoft.Common.TextBox",
                                 "label": "Database name",
-                                "toolTip": "Name for the database",
                                 "constraints": {
                                     "required": true
                                 }
                             },
                             {
-                                "name": "infaDomainDBUser",
+                                "name": "infaDomainExistingDBUser",
                                 "type": "Microsoft.Common.TextBox",
                                 "label": "Informatica domain DB user",
                                 "constraints": {
@@ -549,7 +548,7 @@
                                 }
                             },
                             {
-                                "name": "infaDomainDBPassword",
+                                "name": "infaDomainExistingDBPassword",
                                 "type": "Microsoft.Common.PasswordBox",
                                 "label": {
                                     "password": "Informatica domain DB password",
@@ -563,7 +562,7 @@
                                 }
                             },
                             {
-                                "name": "databaseTablespace",
+                                "name": "databaseExistingTablespace",
                                 "type": "Microsoft.Common.TextBox",
                                 "label": "DB2 database tablespace name",
                                 "defaultValue": "infadb",
@@ -571,7 +570,7 @@
                                 "constraints": {
                                     "required": true
                                 },
-								"visible": "[equals(steps('databaseConfiguration').databaseExistingConfig.databaseType, 'db2')]"
+								"visible": "[equals(steps('databaseConfiguration').databaseExistingConfig.databaseExistingType, 'db2')]"
                             }
                         ],
                         "visible": "[equals(steps('databaseConfiguration').databaseNewOrExisting, 'existing')]"
