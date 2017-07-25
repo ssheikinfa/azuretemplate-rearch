@@ -336,8 +336,7 @@
                                     "value": "existing"
                                 }
                             ]
-                        },
-                        "visible": true
+                        }
                     },
                     {
                         "name": "databaseConfig",
@@ -360,8 +359,7 @@
                                             "value": "sqlserver2016"
                                         }
                                     ]
-                                },
-                                "visible": true
+                                }
                             },
                             {
                                 "name": "databaseHostName",
@@ -537,22 +535,10 @@
                                 "name": "databaseName",
                                 "type": "Microsoft.Common.TextBox",
                                 "label": "Database name",
-                                "defaultValue": "infadb",
                                 "toolTip": "Name for the database",
                                 "constraints": {
                                     "required": true
                                 }
-                            },
-							{
-                                "name": "databaseTablespace",
-                                "type": "Microsoft.Common.TextBox",
-                                "label": "Database name",
-                                "defaultValue": "infadb",
-                                "toolTip": "Name for the database",
-                                "constraints": {
-                                    "required": true
-                                },
-								"visible": "[equals(steps('databaseConfiguration').databaseExistingConfig.databaseType, 'db2')]"
                             },
                             {
                                 "name": "infaDomainDBUser",
@@ -575,6 +561,17 @@
                                 "options": {
                                     "hideConfirmation": true
                                 }
+                            },
+                            {
+                                "name": "databaseTablespace",
+                                "type": "Microsoft.Common.TextBox",
+                                "label": "DB2 database tablespace name",
+                                "defaultValue": "infadb",
+                                "toolTip": "Name for the database",
+                                "constraints": {
+                                    "required": true
+                                },
+								"visible": "[equals(steps('databaseConfiguration').databaseExistingConfig.databaseType, 'db2')]"
                             }
                         ],
                         "visible": "[equals(steps('databaseConfiguration').databaseNewOrExisting, 'existing')]"
