@@ -83,15 +83,23 @@
                 "description": "Subnet address prefix"
             }
         },
+        "dbNewOrExisting": { 
+            "type": "string",
+            "allowedValues": [
+                "new",
+                "existing"
+            ],
+            "defaultValue": "new"
+        },
         "dbType": {
             "type": "string",
             "allowedValues": [
-                "sqlserver",
-                "sqlserverazure"
+                "sqlserver2014",
+                "sqlserver2016"
             ],
-            "defaultValue": "sqlserver",
+            "defaultValue": "sqlserver2014",
             "metadata": {
-                "description": "Database type. Only SQL Server 2014 on VM is supported for now"
+                "description": "Database type. Only SQL Server 2014 and 2016 on VM is supported for now"
             }
         },
         "dbVMName": {
@@ -267,7 +275,7 @@
         "storageUri": "[concat(variables('baseuri'), 'storage', parameters('storageExistingOrNew'),'.json')]",
         "vnetUri": "[concat(variables('baseuri'), 'vnet', parameters('vnetExistingOrNew'),'.json')]",
         "nsgUri": "[concat(variables('baseuri'), 'networksecuritygroup.json')]",
-        "dbUri": "[concat(variables('baseuri'), parameters('dbType'),'.json')]",
+        "dbUri": "[concat(variables('baseuri'), 'database', parameters('dbNewOrExisting'),'.json')]",
 
         "nodeUriList": {
             "False": "node",
@@ -404,6 +412,9 @@
                     },
                     "storageName": {
                         "value": "[parameters('storageName')]"
+                    },
+                    "dbType": {
+                        "value": "[parameters('dbType')]"
                     },
                     "dbVMName": {
                         "value": "[parameters('dbVMName')]"

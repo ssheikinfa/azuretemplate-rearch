@@ -8,6 +8,9 @@
         "storageName": {
             "type": "string"
         },
+        "dbType": { 
+            "type": "string"
+        },
         "dbVMName": {
             "type": "string"
         },
@@ -26,7 +29,7 @@
         "dbPassword": {
             "type": "securestring"
         },
-		"dbName": {
+        "dbName": {
             "type": "string"
         },
         "vnetName": {
@@ -59,6 +62,7 @@
         "imagePublisher": "MicrosoftSQLServer",
         "imageOffer": "SQL2014SP2-WS2012R2",
         "osVersion": "Enterprise"
+
     },
     "resources": [
         {
