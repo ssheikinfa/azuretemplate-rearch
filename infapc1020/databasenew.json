@@ -8,7 +8,7 @@
         "storageName": {
             "type": "string"
         },
-        "dbType": { 
+        "dbType": {
             "type": "string"
         },
         "dbVMName": {
@@ -59,10 +59,18 @@
         "extScriptURI": "[concat(parameters('baseUrl'), '/')]",
         "extScriptFile": "databaseconfiguration.ps1",
 
-        "imagePublisher": "MicrosoftSQLServer",
-        "imageOffer": "SQL2014SP2-WS2012R2",
-        "osVersion": "Enterprise"
-
+        "databaseType": {
+            "sqlserver2014": {
+                "imagePublisher": "MicrosoftSQLServer",
+                "imageOffer": "SQL2014SP2-WS2012R2",
+                "osVersion": "Enterprise"
+            },
+            "sqlserver2016": {
+                "imagePublisher": "MicrosoftSQLServer",
+                "imageOffer": "SQL2016SP1-WS2016",
+                "osVersion": "Enterprise"
+            }
+        }
     },
     "resources": [
         {
@@ -137,9 +145,9 @@
                 },
                 "storageProfile": {
                     "imageReference": {
-                        "publisher": "[variables('imagePublisher')]",
-                        "offer": "[variables('imageOffer')]",
-                        "sku": "[variables('osVersion')]",
+                        "publisher": "[variables('databaseType')[parameters('dbType')['imagePublisher']]]",
+                        "offer": "[variables('databaseType')[parameters('dbType')['imageOffer']]]",
+                        "sku": "[variables('databaseType')[parameters('dbType')['osVersion']]]",
                         "version": "latest"
                     },
                     "osDisk": {
