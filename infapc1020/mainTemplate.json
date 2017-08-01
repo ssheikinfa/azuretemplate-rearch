@@ -289,15 +289,13 @@
                 "artifactsBaseUrl": "https://raw.githubusercontent.com/vijayanand17/azuretemplate-rearch/master/infapc1020"
             },
             "defaultValue": "https://raw.githubusercontent.com/vijayanand17/azuretemplate-rearch/master/infapc1020"
-        }
-        /*,
+        },
         "informaticaTags": {
             "type": "object",
             "defaultValue": {
                 "provider": "AACF690D-C725-4C78-9B1E-E586595B369F"
             }
         }
-        */
     },
     "variables": {
         "baseUri": "[concat(parameters('baseUrl'), '/')]",
