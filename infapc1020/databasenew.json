@@ -29,6 +29,12 @@
         "dbPassword": {
             "type": "securestring"
         },
+        "dbPCRSUser": {
+            "type": "string"
+        },
+        "dbPCRSPassword": {
+            "type": "string"
+        },
         "dbName": {
             "type": "string"
         },
@@ -197,7 +203,7 @@
                             ]
                         },
                         "protectedSettings": {
-                            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file ', variables('extScriptFile'), ' -osUsername \"', parameters('dbVMAdminUsername'), '\" -osPassword \"', parameters('dbVMAdminPassword'), '\" -dbUsername \"', parameters('DBUser'), '\" -dbPassword \"', parameters('DBPassword'), '\" -dbName \"', parameters('dbName'), '\"')]"
+                            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file ', variables('extScriptFile'), ' -osUsername \"', parameters('dbVMAdminUsername'), '\" -osPassword \"', parameters('dbVMAdminPassword'), '\" -dbUsername \"', parameters('DBUser'), '\" -dbPassword \"', parameters('DBPassword'), '\" -pcrsDBUsername \"', parameters('dbPCRSUser') , '\" -pcrsDBPassword \"', parameters('dbPCRSPassword'), '\" -dbName \"', parameters('dbName'), '\"')]"
                         }
                     }
                 },

@@ -83,7 +83,7 @@
                 "description": "Subnet address prefix"
             }
         },
-        "dbNewOrExisting": { 
+        "dbNewOrExisting": {
             "type": "string",
             "allowedValues": [
                 "new",
@@ -142,6 +142,20 @@
             "defaultValue": "",
             "metadata": {
                 "description": "Database user password for Informatica domain"
+            }
+        },
+        "dbPCRSUser": {
+            "type": "string",
+            "defaultValue": "user1",
+            "metadata": {
+                "description": "Database user for Informatica PowerCenter Repository service"
+            }
+        },
+        "dbPCRSPassword": {
+            "type": "securestring",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Database user password for Informatica PowerCenter Repository service"
             }
         },
         "dbName": {
@@ -252,6 +266,20 @@
             "defaultValue": "nolicense",
             "metadata": {
                 "description": "Informatica domain license key file url"
+            }
+        },
+        "infaPCRSName": {
+            "type": "string",
+            "defaultValue": "PCRS",
+            "metadata": {
+                "description": "Informatica PowerCenter Repository service name"
+            }
+        },
+        "infaPCISName": {
+            "type": "string",
+            "defaultValue": "PCIS",
+            "metadata": {
+                "description": "Informatica PowerCenter Integration service name"
             }
         },
         "baseUrl": {
@@ -434,6 +462,12 @@
                     "dbPassword": {
                         "value": "[parameters('dbPassword')]"
                     },
+                    "dbPCRSUser": {
+                        "value": "[parameters('dbPCRSUser')]"
+                    },
+                    "dbPCRSPassword": {
+                        "value": "[parameters('dbPCRSPassword')]"
+                    },
                     "dbName": {
                         "value": "[parameters('dbName')]"
                     },
@@ -493,6 +527,9 @@
                     "nsgName": {
                         "value": "[variables('nsgName')]"
                     },
+                    "dbNewOrExisting": {
+                        "value": "[parameters('dbNewOrExisting')]"
+                    },
                     "dbVMName": {
                         "value": "[parameters('dbVMName')]"
                     },
@@ -501,6 +538,12 @@
                     },
                     "dbPassword": {
                         "value": "[parameters('dbPassword')]"
+                    },
+                    "dbPCRSUser": {
+                        "value": "[parameters('dbPCRSUser')]"
+                    },
+                    "dbPCRSPassword": { 
+                        "value": "[parameters('dbPCRSPassword')]"
                     },
                     "dbName": {
                         "value": "[parameters('dbName')]"
@@ -543,6 +586,12 @@
                     },
                     "infaDomainLicense": {
                         "value": "[parameters('infaDomainLicense')]"
+                    },
+                    "infaPCRSName": {
+                        "value": "[parameters('infaPCRSName')]"
+                    },
+                    "infaPCISName": {
+                        "value": "[parameters('infaPCISName')]"
                     },
                     "baseUrl": {
                         "value": "[variables('baseUri')]"

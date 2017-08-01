@@ -1,25 +1,35 @@
 
 Param(
+  [string]$domainVersion,
   [string]$domainHost,
   [string]$domainName,
   [string]$domainUser,
   [string]$domainPassword,
+  [int]$nodeCount,
   [string]$nodeName,
   [int]$nodePort,
+  [string]$pcrsName,
+  [string]$pcisName,
 
+  [string]$dbNewOrExisting,
   [string]$dbType,
   [string]$dbName,
   [string]$dbUser,
   [string]$dbPassword,
   [string]$dbHost,
   [int]$dbPort,
+  [string]$pcrsDBType,
+  [string]$pcrsUseDSN,
+  [string]$pcrsDSN,
+  [string]$pcrsDBUser,
+  [string]$pcrsDBPassword,
+  [string]$pcrsDBTablespace,
 
   [string]$sitekeyKeyword,
 
   [string]$joinDomain = 0,
   [string]$masterNodeHost,
   [string]$osUserName,
-  [string]$infaEdition,
 
   [string]$storageName,
   [string]$storageKey,
@@ -33,6 +43,8 @@ echo Adding firewall rules for Informatica domain service ports
 netsh  advfirewall firewall add rule name="Informatica_PowerCenter" dir=in action=allow profile=any localport=6005-6113 protocol=TCP
 
 $shareName = "infaaeshare"
+
+# Informatica version needs to be handled here
 
 $infaHome = $env:SystemDrive + "\Informatica\10.1.1"
 $installerHome = $env:SystemDrive + "\Informatica\Archive\informatica_1011HF1_server_winem-64t"
@@ -136,7 +148,7 @@ echo Editing Informatica silent installation file
 }) | sc $propertyFile
 
 
-# To speed up installation
+# To speed-up installation
 Rename-Item $installerHome/source $installerHome/source_temp
 mkdir $installerHome/source
 
@@ -145,7 +157,7 @@ cd $installerHome
 $installCmd = $installerHome + "\silentInstall.bat"
 Start-Process $installCmd -Verb runAs -workingdirectory $installerHome -wait | Out-Null
 
-# Revert speed up changes
+# Revert speed-up changes
 rmdir $installerHome/source
 Rename-Item $installerHome/source_temp $installerHome/source
 
@@ -153,4 +165,73 @@ if($infaLicenseFile -ne "") {
 	rm $infaLicenseFile
 }
 
-echo Informatica setup Complete.
+# Validate of installation
+#################################################
+#################################################
+#################################################
+
+
+echo Informatica domain setup Complete.
+
+# Creating PC services
+
+$code = 0
+if($joinDomain -eq 0 ) {
+    if(-not [string]::IsNullOrEmpty($pcrsDBUser) -and -not [string]::IsNullOrEmpty($pcrsDBPassword)) {
+		#ENABLE CRS AND IS after the issue of db resolution through native clients is resolved
+
+		echo Creating PowerCenter services.
+	
+		cd $infaHome
+	
+		if($dbType -eq "sqlserver" -and $dbNewOrExisting -eq "new") {
+			$pcrsConnectString = $dbHost + "@" + $dbName
+		} elif($dbNewOrExisting -eq "existing") {
+			#
+			#
+			#
+			#
+			echo Handle existing DB here			
+		}
+
+		($out = isp\bin\infacmd createRepositoryService -dn $domainName -nn $nodeName -sn $pcrsName -so DBUser=$pcrsDBUser DatabaseType=$pcrsDBType DBPassword=$pcrsDBPassword ConnectString=$pcrsConnectString CodePage="MS Windows Latin 1 (ANSI), superset of Latin1" OperatingMode=NORMAL -un $domainUser -pd $domainPassword -sd ) | Out-Null
+		$code=$LASTEXITCODE
+		ac C:\InfaServiceLog.log $out
+
+		if ($nodeCount -eq 1 ) {
+			($out = isp\bin\infacmd createintegrationservice -dn $domainName -nn $nodeName -un $domainUser -pd $domainPassword -sn $pcisName -rs  $pcrsName -ru $domainUser -rp $domainPassword  -po codepage_id=2252 -sd -ev INFA_CODEPAGENAME=MS1252) | Out-Null
+			$code=$code -bor $LASTEXITCODE
+			ac C:\InfaServiceLog.log $out 
+		} else {
+
+			($out = isp\bin\infacmd creategrid -dn $domainName -un $domainUser -pd $domainPassword -gn grid -nl $nodeName) | Out-Null        
+
+			$code = $LASTEXITCODE
+
+			ac C:\InfaServiceLog.log $out 
+
+			($out = isp\bin\infacmd createintegrationservice -dn $domainName -gn grid -un $domainUser -pd $domainPassword -sn $pcisName -rs  $pcrsName -ru $domainUser -rp $domainPassword  -po codepage_id=2252 -sd -ev INFA_CODEPAGENAME=MS1252) | Out-Null
+
+			$code = $code -bor $LASTEXITCODE
+
+			ac C:\InfaServiceLog.log $out 
+
+			($out = isp\bin\infacmd updateServiceProcess -dn $domainName -un $domainUser -pd $domainPassword -sn $pcisName -nn $nodeName -po CodePage_Id=2252) | Out-Null
+
+			$code = $code -bor $LASTEXITCODE
+
+			ac C:\InfaServiceLog.log $out 
+		}
+	}
+} else {
+	ac C:\InfaServiceLog.log "Updating the grid with node"
+    ($out = C:\Informatica\10.1.1\isp\bin\infacmd updategrid -dn $domainName -un $domainUser -pd $domainPassword -gn grid -nl $nodeName -ul) |Out-Null
+    $code = $LASTEXITCODE
+    ac C:\InfaServiceLog.log $out
+  	ac C:\InfaServiceLog.log "Updating service process"
+	   ($out = C:\Informatica\10.1.1\isp\bin\infacmd updateServiceProcess -dn $domainName -un $domainUser -pd $domainPassword -sn $pcisName -nn $nodeName -po CodePage_Id=2252 -ev INFA_CODEPAGENAME=MS1252) | Out-Null
+     
+    ac C:\InfaServiceLog.log $out
+}
+
+exit $code

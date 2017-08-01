@@ -3,6 +3,8 @@
   [string]$osPassword,
   [string]$dbUsername,
   [string]$dbPassword,
+  [string]$pcrsDBUsername,
+  [string]$pcrsDBPassword,
   [string]$dbName
 )
 
@@ -12,11 +14,13 @@
 Enable-PSRemoting -Force
 $credential = New-Object System.Management.Automation.PSCredential @(($env:COMPUTERNAME + "\" + $osUsername), (ConvertTo-SecureString -String $osPassword -AsPlainText -Force))
 
-Invoke-Command -Credential $credential -ComputerName $env:COMPUTERNAME -ArgumentList $dbUsername,$dbPassword,$dbName -ScriptBlock {
+Invoke-Command -Credential $credential -ComputerName $env:COMPUTERNAME -ArgumentList $dbUsername,$dbPassword,$pcrsDBUsername,$pcrsDBPassword,$dbName -ScriptBlock {
     Param 
     (
         [string]$dbUsername,
         [string]$dbPassword,
+		[string]$pcrsDBUsername,
+		[string]$pcrsDBPassword,
         [string]$dbName
     )
 
@@ -83,29 +87,41 @@ Invoke-Command -Credential $credential -ComputerName $env:COMPUTERNAME -Argument
 		    writeLog "Statement execution passed"
 	    }
     }
+
+	function createDatabase {
+		Param([String] $dbName)
+		$newDatabase = "CREATE DATABASE " + $dbName + " ON ( NAME = " + $dbName + "_dat, FILENAME = 'C:\SQL_DATA\" + $dbName +".mdf', SIZE = 10, MAXSIZE = 1000, FILEGROWTH = 5 ) LOG ON ( NAME = " + $dbName + "_log, FILENAME = 'C:\SQL_DATA\" + $dbName + "log.ldf', SIZE = 5MB, MAXSIZE = 500MB, FILEGROWTH = 5MB )"	
+
+		writeLog "Creating database: $dbName"
+		executeStatement $newDatabase master
+	}
+
+	function createDatabaseUser {
+		Param([String] $dbUsername, [String] $dbPassword)
+
+		$newLogin = "CREATE LOGIN " + $dbUsername +  " WITH PASSWORD = '" + ($dbPassword -replace "'","''") + "'"
+		$newUser = "CREATE USER " + $dbUsername + " FOR LOGIN " + $dbUsername + " WITH DEFAULT_SCHEMA = " + $dbUsername
+		$updateUserRole = "ALTER ROLE db_datareader ADD MEMBER " + $dbUsername + ";" + 
+                        "ALTER ROLE db_datawriter ADD MEMBER " + $dbUsername + ";" + 
+                        "ALTER ROLE db_ddladmin ADD MEMBER " + $dbUsername
+		$newSchema = "CREATE SCHEMA " + $dbUsername + " AUTHORIZATION " + $dbUsername
+
+		writeLog "Creating db user: $dbUsername" 
+		executeStatement $newLogin $dbName
+		executeStatement $newUser $dbName
+		executeStatement $updateUserRole $dbName
+		executeStatement $newSchema $dbName
+	}
  
     $error.clear()
-    netsh advfirewall firewall add rule name="Informatica_PC_MMSQL" dir=in action=allow profile=any localport=1433 protocol=TCP
+    netsh advfirewall firewall add rule name="Informatica_PC_MSSQL" dir=in action=allow profile=any localport=1433 protocol=TCP
 	
     mkdir -Path C:\Informatica\Archive\logs 2> $null
     mkdir -Path C:\SQL_DATA
     
-    $newDatabase = "CREATE DATABASE " + $dbName + " ON ( NAME = " + $dbName + "_dat, FILENAME = 'C:\SQL_DATA\" + $dbName +".mdf', SIZE = 10, MAXSIZE = 1000, FILEGROWTH = 5 ) LOG ON ( NAME = " + $dbName + "_log, FILENAME = 'C:\SQL_DATA\" + $dbName + "log.ldf', SIZE = 5MB, MAXSIZE = 500MB, FILEGROWTH = 5MB )"
-    $newLogin = "CREATE LOGIN " + $dbUsername +  " WITH PASSWORD = '" + ($dbPassword -replace "'","''") + "'"
-    $newUser = "CREATE USER " + $dbUsername + " FOR LOGIN " + $dbUsername + " WITH DEFAULT_SCHEMA = " + $dbUsername
-    $updateUserRole = "ALTER ROLE db_datareader ADD MEMBER " + $dbUsername + ";" + 
-                        "ALTER ROLE db_datawriter ADD MEMBER " + $dbUsername + ";" + 
-                        "ALTER ROLE db_ddladmin ADD MEMBER " + $dbUsername
-    $newSchema = "CREATE SCHEMA " + $dbUsername + " AUTHORIZATION " + $dbUsername
-
 	waitTillDatabaseIsAlive master
 	
-	writeLog "Creating database: $dbName"
-    executeStatement $newDatabase master
-	
-    writeLog "Creating user: $dbUsername" 
-    executeStatement $newLogin $dbName
-    executeStatement $newUser $dbName
-    executeStatement $updateUserRole $dbName
-    executeStatement $newSchema $dbName
+	createDatabase $dbName
+	createDatabaseUser $dbUsername $dbPassword
+	createDatabaseUser $pcrsDBUsername $pcrsDBPassword
 }
