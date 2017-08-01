@@ -146,7 +146,7 @@
         },
         "dbPCRSUser": {
             "type": "string",
-            "defaultValue": "user1",
+            "defaultValue": "user_crs1",
             "metadata": {
                 "description": "Database user for Informatica PowerCenter Repository service"
             }
@@ -286,9 +286,9 @@
             "type": "string",
             "metadata": {
                 "description": "Base URL for Marketplace",
-                "artifactsBaseUrl": "https://raw.githubusercontent.com/vijayanand17/azuretemplate-rearch/master/infapc1011hf1"
+                "artifactsBaseUrl": "https://raw.githubusercontent.com/vijayanand17/azuretemplate-rearch/master/infapc1020"
             },
-            "defaultValue": "https://raw.githubusercontent.com/vijayanand17/azuretemplate-rearch/master/infapc1011hf1"
+            "defaultValue": "https://raw.githubusercontent.com/vijayanand17/azuretemplate-rearch/master/infapc1020"
         },
         "informaticaTags": {
             "type": "object",
