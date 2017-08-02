@@ -36,7 +36,7 @@ Param(
   [string]$infaLicense
 )
 
-#echo $domainHost $domainName $domainUser $domainPassword $nodeName $nodePort $dbType $dbName $dbUser $dbPassword $dbHost $dbPort $sitekeyKeyword $joinDomain $masterNodeHost $osUserName $infaEdition $storageName $storageKey $infaLicense
+echo $domainHost $domainName $domainUser $domainPassword $nodeName $nodePort $pcrsName $pcisName $dbNewOrExisting $dbType $dbName $dbUser $dbPassword $dbHost $dbPort $pcrsDBType $pcrsUseDSN $pcrsDSN $pcrsDBUser $pcrsDBPassword $pcrsDBTablespace, $sitekeyKeyword $joinDomain $masterNodeHost $osUserName $storageName $storageKey $infaLicense
 
 #Adding Windows firewall inbound rule
 echo Adding firewall rules for Informatica domain service ports
@@ -194,7 +194,9 @@ if($joinDomain -eq 0 ) {
 			echo Handle existing DB here			
 		}
 
-		($out = isp\bin\infacmd createRepositoryService -dn $domainName -nn $nodeName -sn $pcrsName -so DBUser=$pcrsDBUser DatabaseType=$pcrsDBType DBPassword=$pcrsDBPassword ConnectString=$pcrsConnectString CodePage="MS Windows Latin 1 (ANSI), superset of Latin1" OperatingMode=NORMAL -un $domainUser -pd $domainPassword -sd ) | Out-Null
+		echo isp\bin\infacmd createRepositoryService -dn $domainName -nn $nodeName -sn $pcrsName -so DBUser=$pcrsDBUser DatabaseType=$pcrsDBType DBPassword="$pcrsDBPassword" ConnectString="$pcrsConnectString" CodePage="MS Windows Latin 1 (ANSI), superset of Latin1" OperatingMode=NORMAL -un $domainUser -pd $domainPassword -sd
+
+		($out = isp\bin\infacmd createRepositoryService -dn $domainName -nn $nodeName -sn $pcrsName -so DBUser=$pcrsDBUser DatabaseType=$pcrsDBType DBPassword="$pcrsDBPassword" ConnectString="$pcrsConnectString" CodePage="MS Windows Latin 1 (ANSI), superset of Latin1" OperatingMode=NORMAL -un $domainUser -pd $domainPassword -sd ) | Out-Null
 		$code=$LASTEXITCODE
 		ac C:\InfaServiceLog.log $out
 

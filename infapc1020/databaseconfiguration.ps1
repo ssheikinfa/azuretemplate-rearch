@@ -90,7 +90,7 @@ Invoke-Command -Credential $credential -ComputerName $env:COMPUTERNAME -Argument
 
 	function createDatabase {
 		Param([String] $dbName)
-		$newDatabase = "CREATE DATABASE " + $dbName + " ON ( NAME = " + $dbName + "_dat, FILENAME = 'C:\SQL_DATA\" + $dbName +".mdf', SIZE = 10, MAXSIZE = 1000, FILEGROWTH = 5 ) LOG ON ( NAME = " + $dbName + "_log, FILENAME = 'C:\SQL_DATA\" + $dbName + "log.ldf', SIZE = 5MB, MAXSIZE = 500MB, FILEGROWTH = 5MB )"	
+		$newDatabase = "CREATE DATABASE " + $dbName + " ON ( NAME = " + $dbName + "_dat, FILENAME = 'C:\SQL_DATA\" + $dbName +".mdf', SIZE = 10MB, MAXSIZE = 1000MB, FILEGROWTH = 5MB ) LOG ON ( NAME = " + $dbName + "_log, FILENAME = 'C:\SQL_DATA\" + $dbName + "log.ldf', SIZE = 5MB, MAXSIZE = 500MB, FILEGROWTH = 5MB )"	
 
 		writeLog "Creating database: $dbName"
 		executeStatement $newDatabase master
