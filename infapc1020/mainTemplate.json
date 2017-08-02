@@ -569,6 +569,9 @@
                     "nodeVMCount": {
                         "value": "[variables('nodeVMCountInt')]"
                     },
+                    "infaVersion": {
+                        "value": "[parameters('infaVersion')]"
+                    },
                     "infaDomainName": {
                         "value": "[parameters('infaDomainName')]"
                     },
