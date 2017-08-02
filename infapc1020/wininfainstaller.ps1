@@ -5,7 +5,6 @@ Param(
   [string]$domainName,
   [string]$domainUser,
   [string]$domainPassword,
-  [int]$nodeCount,
   [string]$nodeName,
   [int]$nodePort,
   [string]$pcrsName,
@@ -36,10 +35,10 @@ Param(
   [string]$infaLicense
 )
 
-echo $domainHost $domainName $domainUser $domainPassword $nodeName $nodePort $pcrsName $pcisName $dbNewOrExisting $dbType $dbName $dbUser $dbPassword $dbHost $dbPort $pcrsDBType $pcrsUseDSN $pcrsDSN $pcrsDBUser $pcrsDBPassword $pcrsDBTablespace, $sitekeyKeyword $joinDomain $masterNodeHost $osUserName $storageName $storageKey $infaLicense
+#echo $domainHost $domainName $domainUser $domainPassword $nodeName $nodePort $dbType $dbName $dbUser $dbPassword $dbHost $dbPort $sitekeyKeyword $joinDomain $masterNodeHost $osUserName $infaEdition $storageName $storageKey $infaLicense
 
 #Adding Windows firewall inbound rule
-echo Adding firewall rules for Informatica domain service ports
+echo "Adding firewall rules for Informatica domain service ports"
 netsh  advfirewall firewall add rule name="Informatica_PowerCenter" dir=in action=allow profile=any localport=6005-6113 protocol=TCP
 
 $shareName = "infaaeshare"
@@ -49,6 +48,7 @@ $shareName = "infaaeshare"
 $infaHome = $env:SystemDrive + "\Informatica\10.1.1"
 $installerHome = $env:SystemDrive + "\Informatica\Archive\informatica_1011HF1_server_winem-64t"
 $utilityHome = $env:SystemDrive + "\Informatica\Archive\utilities"
+$logHome = $env:SystemDrive + "\Informatica\Archive\service_creation.log"
 
 #Setting Java in path
 $env:JRE_HOME= $installerHome + "\source\java\jre"
@@ -65,13 +65,13 @@ $infaLicenseFile = ""
 $CLOUD_SUPPORT_ENABLE = "1"
 if($infaLicense -ne "nolicense" -and $joinDomain -eq 0) {
 	$infaLicenseFile = $env:SystemDrive + "\Informatica\license.key"
-	echo Getting Informatica license
+	echo "Getting Informatica license"
 	wget $infaLicense -OutFile $infaLicenseFile
 
 	if (Test-Path $infaLicenseFile) {
 		$CLOUD_SUPPORT_ENABLE = "0"
 	} else {
-		echo Error downloading license file from URL $infaLicense
+		echo "Error downloading license file from URL" + $infaLicense
 	}
 }
 
@@ -81,7 +81,7 @@ if($joinDomain -eq 1) {
     # This is buffer time for master node to start
     Start-Sleep -s 300
 } else {
-	echo Creating shared directory on Azure storage
+	echo "Creating shared directory on Azure storage"
     cd $utilityHome
     java -jar iadutility.jar createAzureFileShare -storageaccesskey $storageKey -storagename "$storageName"
 }
@@ -90,13 +90,13 @@ $env:USERNAME = $osUserName
 $env:USERDOMAIN = $env:COMPUTERNAME
 
 #Mounting azure shared file drive
-echo Mounting the shared directory
+echo "Mounting the shared directory"
 $cmd = "net use I: \\$storageName.file.core.windows.net\$shareName /u:$storageName $storageKey" 
 $cmd | Set-Content "$env:SystemDrive\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\MountShareDrive.cmd"
 
 runas /user:$osUserName net use I: \\$storageName.file.core.windows.net\$shareName /u:$storageName $storageKey
 
-echo Editing Informatica silent installation file
+echo "Editing Informatica silent installation file"
 (gc $propertyFile | %{$_ -replace '^LICENSE_KEY_LOC=.*$',"LICENSE_KEY_LOC=$infaLicenseFile"  `
 `
 -replace '^CREATE_DOMAIN=.*$',"CREATE_DOMAIN=$createDomain"  `
@@ -152,7 +152,7 @@ echo Editing Informatica silent installation file
 Rename-Item $installerHome/source $installerHome/source_temp
 mkdir $installerHome/source
 
-echo Installing Informatica domain
+echo "Installing Informatica domain"
 cd $installerHome
 $installCmd = $installerHome + "\silentInstall.bat"
 Start-Process $installCmd -Verb runAs -workingdirectory $installerHome -wait | Out-Null
@@ -167,11 +167,8 @@ if($infaLicenseFile -ne "") {
 
 # Validate of installation
 #################################################
-#################################################
-#################################################
 
-
-echo Informatica domain setup Complete.
+echo "Informatica domain setup Complete"
 
 # Creating PC services
 
@@ -180,60 +177,59 @@ if($joinDomain -eq 0 ) {
     if(-not [string]::IsNullOrEmpty($pcrsDBUser) -and -not [string]::IsNullOrEmpty($pcrsDBPassword)) {
 		#ENABLE CRS AND IS after the issue of db resolution through native clients is resolved
 
-		echo Creating PowerCenter services.
+		echo "Creating PowerCenter services"
 	
 		cd $infaHome
-	
-		if($dbType -eq "sqlserver" -and $dbNewOrExisting -eq "new") {
+	    if(($dbType -like "mssqlserver" -or $dbType -like "sqlserver") -and $dbNewOrExisting -eq "new") {
+            $pcrsDBType = "MSSQLSERVER"
 			$pcrsConnectString = $dbHost + "@" + $dbName
-		} elif($dbNewOrExisting -eq "existing") {
-			#
-			#
-			#
-			#
-			echo Handle existing DB here			
+		} else {
+            if($dbNewOrExisting -eq "existing") {
+			    #################################################
+			    echo "Handle existing DB here"
+            } else {
+                echo "Unsupported DB type for CRS"
+            }
 		}
 
-		echo isp\bin\infacmd createRepositoryService -dn $domainName -nn $nodeName -sn $pcrsName -so DBUser=$pcrsDBUser DatabaseType=$pcrsDBType DBPassword="$pcrsDBPassword" ConnectString="$pcrsConnectString" CodePage="MS Windows Latin 1 (ANSI), superset of Latin1" OperatingMode=NORMAL -un $domainUser -pd $domainPassword -sd
-
 		($out = isp\bin\infacmd createRepositoryService -dn $domainName -nn $nodeName -sn $pcrsName -so DBUser=$pcrsDBUser DatabaseType=$pcrsDBType DBPassword="$pcrsDBPassword" ConnectString="$pcrsConnectString" CodePage="MS Windows Latin 1 (ANSI), superset of Latin1" OperatingMode=NORMAL -un $domainUser -pd $domainPassword -sd ) | Out-Null
+
 		$code=$LASTEXITCODE
-		ac C:\InfaServiceLog.log $out
+		ac $logHome $out
 
 		if ($nodeCount -eq 1 ) {
 			($out = isp\bin\infacmd createintegrationservice -dn $domainName -nn $nodeName -un $domainUser -pd $domainPassword -sn $pcisName -rs  $pcrsName -ru $domainUser -rp $domainPassword  -po codepage_id=2252 -sd -ev INFA_CODEPAGENAME=MS1252) | Out-Null
 			$code=$code -bor $LASTEXITCODE
-			ac C:\InfaServiceLog.log $out 
+			ac $logHome $out 
 		} else {
 
 			($out = isp\bin\infacmd creategrid -dn $domainName -un $domainUser -pd $domainPassword -gn grid -nl $nodeName) | Out-Null        
 
 			$code = $LASTEXITCODE
 
-			ac C:\InfaServiceLog.log $out 
+			ac $logHome $out 
 
 			($out = isp\bin\infacmd createintegrationservice -dn $domainName -gn grid -un $domainUser -pd $domainPassword -sn $pcisName -rs  $pcrsName -ru $domainUser -rp $domainPassword  -po codepage_id=2252 -sd -ev INFA_CODEPAGENAME=MS1252) | Out-Null
 
 			$code = $code -bor $LASTEXITCODE
 
-			ac C:\InfaServiceLog.log $out 
+			ac $logHome $out 
 
 			($out = isp\bin\infacmd updateServiceProcess -dn $domainName -un $domainUser -pd $domainPassword -sn $pcisName -nn $nodeName -po CodePage_Id=2252) | Out-Null
 
 			$code = $code -bor $LASTEXITCODE
-
-			ac C:\InfaServiceLog.log $out 
+			ac $logHome $out 
 		}
 	}
 } else {
-	ac C:\InfaServiceLog.log "Updating the grid with node"
+	ac $logHome "Updating the grid with node"
     ($out = C:\Informatica\10.1.1\isp\bin\infacmd updategrid -dn $domainName -un $domainUser -pd $domainPassword -gn grid -nl $nodeName -ul) |Out-Null
     $code = $LASTEXITCODE
-    ac C:\InfaServiceLog.log $out
-  	ac C:\InfaServiceLog.log "Updating service process"
+    ac $logHome $out
+  	ac $logHome "Updating service process"
 	   ($out = C:\Informatica\10.1.1\isp\bin\infacmd updateServiceProcess -dn $domainName -un $domainUser -pd $domainPassword -sn $pcisName -nn $nodeName -po CodePage_Id=2252 -ev INFA_CODEPAGENAME=MS1252) | Out-Null
      
-    ac C:\InfaServiceLog.log $out
+    ac $logHome $out
 }
 
 exit $code
