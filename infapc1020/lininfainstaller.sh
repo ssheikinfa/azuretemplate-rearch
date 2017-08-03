@@ -1,29 +1,36 @@
 #!/bin/sh
 
 #Script arguments
-domainHost=${1}
-domainName=${2}
-domainUser=${3}
-domainPassword=${4}
-nodeName=${5}
-nodePort=${6}
+domainVersion=${1}
+domainHost=${2}
+domainName=${3}
+domainUser=${4}
+domainPassword=${5}
+nodeCount=${6}
+nodeName=${7}
+nodePort=${8}
+pcrsName=${9}
+pcisName=${10}
 
-dbType=${7}
-dbName=${8}
-dbUser=${9}
-dbPassword=${10}
-dbHost=${11}
-dbPort=${12}
+dbNewOrExisting=${11}
+dbType=${12}
+dbName=${13}
+dbUser=${14}
+dbPassword=${15}
+pcrsDBUser=${16}
+pcrsDBPassword=${17}
+dbHost=${18}
+dbPort=${19}
 
-sitekeyKeyword=${13}
+sitekeyKeyword=${20}
 
-joinDomain=${14}
-osUserName=${15}
+joinDomain=${21}
+osUserName=${22}
 
-storageName=${16}
-storageKey=${17}
+storageName=${23}
+storageKey=${24}
 
-domainLicenseURL=${18}
+domainLicenseURL=${25}
 
 echo Starting Informatica setup...
 echo Number of parameters $#
@@ -42,7 +49,9 @@ hostname=`hostname`
 informaticaopt=/opt/Informatica
 infainstallerloc=$informaticaopt/Archive/server
 utilityhome=$informaticaopt/Archive/utilities
+logfile=$informaticaopt/Archive/logs/service_creation.log
 
+mkdir -p $informaticaopt/Archive/logs
 
 infainstallionlocown=/home/Informatica
 #mkdir -p $infainstallionlocown/10.1.1
@@ -172,10 +181,42 @@ then
 	rm $informaticaopt/license.key
 fi
 
+echo Informatica setup Complete.
+
+cd $infainstallionlocown/10.1.1
+
+if [ $joinDomain -eq 0 ]
+then
+	echo "creating PC services" >> $logfile
+
+    isp/bin/infacmd.sh  createrepositoryservice -dn $domainName -nn $nodeName -sn $pcrsName -so DBUser=$pcrsDBUser DatabaseType=$dbType DBPassword=$pcrsDBPassword ConnectString=$dbName CodePage="ISO 8859-1 Western European"  OperatingMode=NORMAL -un $domainUser -pd $domainPassword -sd &>> $logfile
+    EXITCODE=$?
+
+    if [ $nodeCount -eq 1 ]
+	then
+		isp/bin/infacmd.sh  createintegrationservice -dn $domainName -nn $nodeName -un $domainUser -pd $domainPassword -sn $pcisName  -rs $pcrsName  -ru $domainUser -rp $domainPassword -po codepage_id=4 -sd &>> $logfile
+	   	EXITCODE=$(($? | EXITCODE))
+	else 
+		isp/bin/infacmd.sh  creategrid -dn $domainName -un $domainUser -pd $domainPassword -gn grid -nl $nodeName &>> $logfile
+	  	EXITCODE=$(($? | EXITCODE))
+
+		isp/bin/infacmd.sh  createintegrationservice -dn $domainName -gn grid -un $domainUser -pd $domainPassword -sn $pcisName -rs  $pcrsName -ru $domainUser -rp $domainPassword  -po codepage_id=4 -sd &>> $logfile
+	  	EXITCODE=$(($? | EXITCODE))
+
+	fi
+else
+    isp/bin/infacmd.sh  updategrid -dn $domainName -un $domainUser -pd $domainPassword -gn grid -nl $nodeName -ul &>> $logfile
+	EXITCODE=$?
+
+    isp/bin/infacmd.sh  updateServiceProcess -dn $domainName -un $domainUser -pd $domainPassword -sn $pcisName -nn $nodeName -po CodePage_Id=4 &>> $logfile
+    EXITCODE=$(($? | EXITCODE))
+     
+fi
+
+exit $EXITCODE
+
 echo Changing ownership of directories
 chown -R $osUserName $infainstallionlocown
 chown -R $osUserName $informaticaopt 
 chown -R $osUserName $mountdir
 chown -R $osUserName /home/$osUserName
-
-echo Informatica setup Complete.

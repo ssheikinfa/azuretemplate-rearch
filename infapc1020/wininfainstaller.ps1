@@ -5,6 +5,7 @@ Param(
   [string]$domainName,
   [string]$domainUser,
   [string]$domainPassword,
+  [int]$nodeCount,
   [string]$nodeName,
   [int]$nodePort,
   [string]$pcrsName,
@@ -172,14 +173,16 @@ echo "Informatica domain setup Complete"
 
 # Creating PC services
 
+cd $infaHome
+
 $code = 0
+
 if($joinDomain -eq 0 ) {
     if(-not [string]::IsNullOrEmpty($pcrsDBUser) -and -not [string]::IsNullOrEmpty($pcrsDBPassword)) {
 		#ENABLE CRS AND IS after the issue of db resolution through native clients is resolved
 
 		echo "Creating PowerCenter services"
-	
-		cd $infaHome
+
 	    if(($dbType -like "mssqlserver" -or $dbType -like "sqlserver") -and $dbNewOrExisting -eq "new") {
             $pcrsDBType = "MSSQLSERVER"
 			$pcrsConnectString = $dbHost + "@" + $dbName
@@ -223,11 +226,11 @@ if($joinDomain -eq 0 ) {
 	}
 } else {
 	ac $logHome "Updating the grid with node"
-    ($out = C:\Informatica\10.1.1\isp\bin\infacmd updategrid -dn $domainName -un $domainUser -pd $domainPassword -gn grid -nl $nodeName -ul) |Out-Null
+    ($out = isp\bin\infacmd updategrid -dn $domainName -un $domainUser -pd $domainPassword -gn grid -nl $nodeName -ul) |Out-Null
     $code = $LASTEXITCODE
     ac $logHome $out
   	ac $logHome "Updating service process"
-	   ($out = C:\Informatica\10.1.1\isp\bin\infacmd updateServiceProcess -dn $domainName -un $domainUser -pd $domainPassword -sn $pcisName -nn $nodeName -po CodePage_Id=2252 -ev INFA_CODEPAGENAME=MS1252) | Out-Null
+	   ($out = isp\bin\infacmd updateServiceProcess -dn $domainName -un $domainUser -pd $domainPassword -sn $pcisName -nn $nodeName -po CodePage_Id=2252 -ev INFA_CODEPAGENAME=MS1252) | Out-Null
      
     ac $logHome $out
 }

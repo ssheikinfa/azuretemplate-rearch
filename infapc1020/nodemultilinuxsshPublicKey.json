@@ -20,7 +20,10 @@
         "subnetId": {
             "type": "string"
         },
-        "nsgName": { 
+        "nsgName": {
+            "type": "string"
+        },
+        "dbNewOrExisting": {
             "type": "string"
         },
         "dbVMName": {
@@ -30,6 +33,12 @@
             "type": "string"
         },
         "dbPassword": {
+            "type": "securestring"
+        },
+        "dbPCRSUser": {
+            "type": "string"
+        },
+        "dbPCRSPassword": { 
             "type": "securestring"
         },
         "dbName": {
@@ -42,8 +51,7 @@
             "type": "string"
         },
         "nodeVMAdminUsername": {
-            "type": "string",
-            "minLength": 1
+            "type": "string"
         },
         "nodeVMAdminPassword": {
             "type": "securestring"
@@ -52,34 +60,37 @@
             "type": "securestring"
         },
         "nodeVMNamePrefix": {
-            "type": "string",
-            "minLength": 1
+            "type": "string"
         },
         "nodeVMCount": {
             "type": "int"
         },
+        "infaVersion": {
+            "type": "string"
+        },
         "infaDomainName": {
-            "type": "string",
-            "minLength": 4
+            "type": "string"
         },
         "infaDomainUser": {
-            "type": "string",
-            "minLength": 4
+            "type": "string"
         },
         "infaDomainPassword": {
-            "type": "securestring",
-            "minLength": 4
+            "type": "securestring"
         },
         "infaNodeNamePrefix": {
-            "type": "string",
-            "minLength": 4
+            "type": "string"
         },
         "infaKeyword": {
-            "type": "securestring",
-            "minLength": 4
-        },
-        "infaDomainLicense": { 
             "type": "securestring"
+        },
+        "infaDomainLicense": {
+            "type": "securestring"
+        },
+        "infaPCRSName": {
+            "type": "string"
+        },
+        "infaPCISName": {
+            "type": "string"
         },
         "baseUrl": {
             "type": "string"
@@ -242,7 +253,7 @@
                             ]
                         },
                         "protectedSettings": {
-                            "commandToExecute": "[concat('sh ', variables('extScriptFile'), ' ', concat(parameters('nodeVMNamePrefix'), '1'), ' ', parameters('infaDomainName'), ' \"', parameters('infaDomainUser'), '\" \"', parameters('infaDomainPassword'), '\" ', parameters('infaNodeNamePrefix'), '1', ' ', variables('infaNodePort'), ' ', variables('dbType'), ' ', parameters('dbName'), ' \"', parameters('dbUser'), '\" \"', parameters('dbPassword'), '\" ', parameters('dbVMName'), ' ', variables('dbPort'), ' \"', parameters('infaKeyword'), '\" 0 \"', parameters('nodeVMAdminUsername'), '\" \"', parameters('storageName'), '\" ', listKeys(parameters('storageID'), '2016-01-01').keys[0].value, ' \"', parameters('infaDomainLicense'), '\"')]"
+                            "commandToExecute": "[concat('sh ', variables('extScriptFile'), ' ', parameters('infaVersion'), ' ', concat(parameters('nodeVMNamePrefix'), '1'), ' ', parameters('infaDomainName'), ' \"', parameters('infaDomainUser'), '\" \"', parameters('infaDomainPassword'), '\" ', parameters('nodeVMCount'), ' ', parameters('infaNodeNamePrefix'), '1', ' ', variables('infaNodePort'), ' ', parameters('infaPCRSName'), ' ', parameters('infaPCISName'), ' ', parameters('dbNewOrExisting'), ' ', variables('dbType'), ' ', parameters('dbName'), ' \"', parameters('dbUser'), '\" \"', parameters('dbPassword'), '\" ', parameters('dbPCRSUser'), ' \"', parameters('dbPCRSPassword'), '\" ',parameters('dbVMName'), ' ', variables('dbPort'), ' \"', parameters('infaKeyword'), '\" 0 \"', parameters('nodeVMAdminUsername'), '\" \"', parameters('storageName'), '\" ', listKeys(parameters('storageID'), '2016-01-01').keys[0].value, ' \"', parameters('infaDomainLicense'), '\"')]"
                         }
                     }
                 }
@@ -394,7 +405,7 @@
                             ]
                         },
                         "protectedSettings": {
-                            "commandToExecute": "[concat('sh ', variables('extScriptFile'), ' ', concat(parameters('nodeVMNamePrefix'), '1'), ' ', parameters('infaDomainName'), ' \"', parameters('infaDomainUser'), '\" \"', parameters('infaDomainPassword'), '\" ', parameters('infaNodeNamePrefix'), add(copyIndex(), 2), ' ', variables('infaNodePort'), ' ', variables('dbType'), ' ', parameters('dbName'), ' \"', parameters('dbUser'), '\" \"', parameters('dbPassword'), '\" ', parameters('dbVMName'), ' ', variables('dbPort'), ' \"', parameters('infaKeyword'), '\" 1 \"', parameters('nodeVMAdminUsername'), '\" \"', parameters('storageName'), '\" ', listKeys(parameters('storageID'), '2016-01-01').keys[0].value, ' \"', parameters('infaDomainLicense'), '\"')]"
+                            "commandToExecute": "[concat('sh ', variables('extScriptFile'), ' ', parameters('infaVersion'), ' ', concat(parameters('nodeVMNamePrefix'), '1'), ' ', parameters('infaDomainName'), ' \"', parameters('infaDomainUser'), '\" \"', parameters('infaDomainPassword'), '\" ', parameters('nodeVMCount'), ' ', parameters('infaNodeNamePrefix'), add(copyIndex(), 2), ' ', variables('infaNodePort'), ' ', parameters('infaPCRSName'), ' ', parameters('infaPCISName'), ' ', parameters('dbNewOrExisting'), ' ', variables('dbType'), ' ', parameters('dbName'), ' \"', parameters('dbUser'), '\" \"', parameters('dbPassword'), '\" ', parameters('dbPCRSUser'), ' \"', parameters('dbPCRSPassword'), '\" ', parameters('dbVMName'), ' ', variables('dbPort'), ' \"', parameters('infaKeyword'), '\" 1 \"', parameters('nodeVMAdminUsername'), '\" \"', parameters('storageName'), '\" ', listKeys(parameters('storageID'), '2016-01-01').keys[0].value, ' \"', parameters('infaDomainLicense'), '\"')]"
                         }
                     }
                 }
