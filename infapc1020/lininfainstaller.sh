@@ -37,7 +37,7 @@ echo Number of parameters $#
 #echo $domainHost $domainName $domainUser $domainPassword $nodeName $nodePort $dbType $dbName $dbUser $dbPassword $dbHost $dbPort $sitekeyKeyword $joinDomain $osUserName $storageName $storageKey $domainLicenseURL
 
 #Usage
-if [ $# -ne 18 ]
+if [ $# -ne 25 ]
 then
 	echo lininfainstaller.sh domainHost domainName domainUser domainPassword nodeName nodePort dbType dbName dbUser dbPassword dbHost dbPort sitekeyKeyword joinDomain  osUserName storageName storageKey domainLicenseURL
 	exit -1
