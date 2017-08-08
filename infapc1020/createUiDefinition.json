@@ -15,95 +15,128 @@
                 "bladeTitle": "Informatica Domain Settings",
                 "elements": [
                     {
-                        "name": "infaVersion",
-                        "type": "Microsoft.Common.DropDown",
-                        "label": "Informatica PowerCenter version",
-                        "defaultValue": "10.1.1",
-                        "toolTip": "Informatica PowerCenter product version",
-                        "constraints": {
-                            "allowedValues": [
-                                {
-                                    "label": "10.1.1",
-                                    "value": "1011"
+                        "name": "domainConfig",
+                        "type": "Microsoft.Common.Section",
+                        "label": "Domain configuration",
+                        "elements": [
+                            {
+                                "name": "infaVersion",
+                                "type": "Microsoft.Common.DropDown",
+                                "label": "Informatica PowerCenter version",
+                                "defaultValue": "10.1.1",
+                                "toolTip": "Informatica PowerCenter product version",
+                                "constraints": {
+                                    "allowedValues": [
+                                        {
+                                            "label": "10.1.1",
+                                            "value": "1011"
+                                        }
+                                    ]
+                                },
+                                "visible": true
+                            },
+                            {
+                                "name": "infaDomainName",
+                                "type": "Microsoft.Common.TextBox",
+                                "label": "Informatica domain name",
+                                "defaultValue": "Azure_Domain",
+                                "toolTip": "Specify a name for the Domain",
+                                "constraints": {
+                                    "required": true,
+                                    "regex": "^[a-z0-9A-Z_]{3,30}$",
+                                    "validationMessage": "Only alphanumeric characters and underscore are allowed. The value must be 3-30"
                                 }
-                            ]
-                        },
-                        "visible": true
-                    },
-                    {
-                        "name": "infaDomainName",
-                        "type": "Microsoft.Common.TextBox",
-                        "label": "Informatica domain name",
-                        "defaultValue": "Azure_Domain",
-                        "toolTip": "Specify a name for the Domain",
-                        "constraints": {
-                            "required": true,
-                            "regex": "^[a-z0-9A-Z_]{3,30}$",
-                            "validationMessage": "Only alphanumeric characters and underscore are allowed. The value must be 3-30"
-                        }
-                    },
-                    {
-                        "name": "infaDomainUser",
-                        "type": "Microsoft.Common.TextBox",
-                        "label": "Informatica domain administrator name",
-                        "defaultValue": "Administrator",
-                        "toolTip": "Domain administrator user name",
-                        "constraints": {
-                            "required": true,
-                            "regex": "^[a-z0-9A-Z_]{3,30}$",
-                            "validationMessage": "Only alphanumeric characters and underscore are allowed. The value must be 3-30"
-                        }
-                    },
-                    {
-                        "name": "infaDomainPassword",
-                        "type": "Microsoft.Common.PasswordBox",
-                        "label": {
-                            "password": "Informatica domain password",
-                            "confirmPassword": "Confirm Informatica domain password"
-                        },
-                        "constraints": {
-                            "required": true,
-                            "regex": "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[^\\s\\w])(?!.*[\"$]).{8,123}$",
-                            "validationMessage": "Password must be at least 8 characters in length. Should contain at least one special character, number, upper-case and lower-case character. Double quote(\") and dollar($) is not allowed"
-                        },
-                        "options": {
-                            "hideConfirmation": false
-                        }
+                            },
+                            {
+                                "name": "infaDomainUser",
+                                "type": "Microsoft.Common.TextBox",
+                                "label": "Informatica domain administrator name",
+                                "defaultValue": "Administrator",
+                                "toolTip": "Domain administrator user name",
+                                "constraints": {
+                                    "required": true,
+                                    "regex": "^[a-z0-9A-Z_]{3,30}$",
+                                    "validationMessage": "Only alphanumeric characters and underscore are allowed. The value must be 3-30"
+                                }
+                            },
+                            {
+                                "name": "infaDomainPassword",
+                                "type": "Microsoft.Common.PasswordBox",
+                                "label": {
+                                    "password": "Informatica domain password",
+                                    "confirmPassword": "Confirm Informatica domain password"
+                                },
+                                "constraints": {
+                                    "required": true,
+                                    "regex": "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[^\\s\\w])(?!.*[\"$]).{8,123}$",
+                                    "validationMessage": "Password must be at least 8 characters in length. Should contain at least one special character, number, upper-case and lower-case character. Double quote(\") and dollar($) is not allowed"
+                                },
+                                "options": {
+                                    "hideConfirmation": false
+                                }
 
+                            },
+                            {
+                                "name": "infaDomainEncryptionKeyword",
+                                "type": "Microsoft.Common.PasswordBox",
+                                "toolTip": "Keyphrase for generating encryption key for domain",
+                                "label": {
+                                    "password": "Keyphrase for encryption key",
+                                    "confirmPassword": "Confirm keyphrase for encryption key"
+                                },
+                                "constraints": {
+                                    "required": true,
+                                    "regex": "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[^\\s\\w])(?!.*[\"$]).{8,20}$",
+                                    "validationMessage": "Keyphrase must be at least 8 and maximum of 20 characters in length. Should contain at least one special character, number, upper-case and lower-case character. Double quote(\") and dollar($) is not allowed"
+                                },
+                                "options": {
+                                    "hideConfirmation": true
+                                }
+                            },
+                            {
+                                "name": "infaDomainLicense",
+                                "type": "Microsoft.Common.FileUpload",
+                                "label": "Informatica license file",
+                                "toolTip": "",
+                                "constraints": {
+                                    "required": false,
+                                    "accept": ".key"
+                                },
+                                "options": {
+                                    "multiple": false,
+                                    "uploadMode": "url",
+                                    "openMode": "text",
+                                    "encoding": "UTF-8"
+                                },
+                                "visible": true
+                            }
+                        ]
                     },
                     {
-                        "name": "infaDomainEncryptionKeyword",
-                        "type": "Microsoft.Common.PasswordBox",
-                        "toolTip": "Keyphrase for generating encryption key for domain",
-                        "label": {
-                            "password": "Keyphrase for encryption key",
-                            "confirmPassword": "Confirm keyphrase for encryption key"
-                        },
-                        "constraints": {
-                            "required": true,
-                            "regex": "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[^\\s\\w])(?!.*[\"$]).{8,20}$",
-                            "validationMessage": "Keyphrase must be at least 8 and maximum of 20 characters in length. Should contain at least one special character, number, upper-case and lower-case character. Double quote(\") and dollar($) is not allowed"
-                        },
-                        "options": {
-                            "hideConfirmation": true
-                        }
-                    },
-                    {
-                        "name": "infaDomainLicense",
-                        "type": "Microsoft.Common.FileUpload",
-                        "label": "Informatica license file",
-                        "toolTip": "",
-                        "constraints": {
-                            "required": false,
-                            "accept": ".key"
-                        },
-                        "options": {
-                            "multiple": false,
-                            "uploadMode": "url",
-                            "openMode": "text",
-                            "encoding": "UTF-8"
-                        },
-                        "visible": true
+                        "name": "domainServiceConfig",
+                        "type": "Microsoft.Common.Section",
+                        "label": "Service configuration",
+                        "elements": [
+                             {
+                                "name": "pcServiceCreateOrSkip",
+                                "type": "Microsoft.Common.OptionsGroup",
+                                "label": "PowerCenter service",
+                                "defaultValue": "New",
+                                "toolTip": "Choose option New if database has to be created or Existing to use existing database on Azure",
+                                "constraints": {
+                                    "allowedValues": [
+                                        {
+                                            "label": "Create",
+                                            "value": "create"
+                                        },
+                                        {
+                                            "label": "Skip",
+                                            "value": "skip"
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
                     }
                 ]
             },
@@ -507,7 +540,7 @@
                                             "label": "Oracle",
                                             "value": "oracle"
                                         },
-										{
+                                        {
                                             "label": "DB2",
                                             "value": "db2"
                                         }
@@ -522,7 +555,7 @@
                                     "required": true
                                 }
                             },
-							{
+                            {
                                 "name": "databaseExistingPort",
                                 "type": "Microsoft.Common.TextBox",
                                 "label": "Database port",
@@ -530,7 +563,7 @@
                                     "required": true
                                 }
                             },
-							{
+                            {
                                 "name": "databaseExistingName",
                                 "type": "Microsoft.Common.TextBox",
                                 "label": "Database name",
@@ -567,7 +600,7 @@
                                 "constraints": {
                                     "required": false
                                 },
-								"visible": "[equals(steps('databaseConfiguration').databaseExistingConfig.databaseExistingType, 'db2')]"
+                                "visible": "[equals(steps('databaseConfiguration').databaseExistingConfig.databaseExistingType, 'db2')]"
                             }
                         ],
                         "visible": "[equals(steps('databaseConfiguration').databaseNewOrExisting, 'existing')]"
