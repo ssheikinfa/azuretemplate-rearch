@@ -518,7 +518,6 @@
                                 "name": "databaseExistingHostName",
                                 "type": "Microsoft.Common.TextBox",
                                 "label": "Database machine name",
-                                "defaultValue": "DVM",
                                 "constraints": {
                                     "required": true
                                 }
@@ -542,7 +541,7 @@
                             {
                                 "name": "infaDomainExistingDBUser",
                                 "type": "Microsoft.Common.TextBox",
-                                "label": "Informatica domain DB user",
+                                "label": "Database user",
                                 "constraints": {
                                     "required": true
                                 }
@@ -551,7 +550,7 @@
                                 "name": "infaDomainExistingDBPassword",
                                 "type": "Microsoft.Common.PasswordBox",
                                 "label": {
-                                    "password": "Informatica domain DB password",
+                                    "password": "Database password",
                                     "confirmPassword": "Confirm Informatica domain DB password"
                                 },
                                 "constraints": {
@@ -565,10 +564,8 @@
                                 "name": "databaseExistingTablespace",
                                 "type": "Microsoft.Common.TextBox",
                                 "label": "DB2 database tablespace name",
-                                "defaultValue": "infadb",
-                                "toolTip": "Name for the database",
                                 "constraints": {
-                                    "required": true
+                                    "required": false
                                 },
 								"visible": "[equals(steps('databaseConfiguration').databaseExistingConfig.databaseExistingType, 'db2')]"
                             }
@@ -648,6 +645,7 @@
             "infaDomainPassword": "[steps('infaDomainConfiguration').infaDomainPassword]",
             "infaDomainLicense": "[steps('infaDomainConfiguration').infaDomainLicense]",
             "infaKeyword": "[steps('infaDomainConfiguration').infaDomainEncryptionKeyword]",
+            "dbNewOrExisting": "[steps('databaseConfiguration').databaseNewOrExisting]",
             "dbVMName": "[steps('databaseConfiguration').databaseConfig.databaseHostName]",
             "dbVMSize": "[steps('databaseConfiguration').databaseConfig.databaseVMSize]",
             "dbType": "[steps('databaseConfiguration').databaseConfig.databaseType]",
@@ -656,6 +654,13 @@
             "dbVMAdminPassword": "[steps('databaseConfiguration').databaseConfig.dbVMAdminPassword.password]",
             "dbUser": "[steps('databaseConfiguration').databaseUser.infaDomainDBUser]",
             "dbPassword": "[steps('databaseConfiguration').databaseUser.infaDomainDBPassword]",
+            "dbExistingType": "[steps('databaseConfiguration').databaseExistingConfig.databaseExistingType]",
+            "dbExistingHost": "[steps('databaseConfiguration').databaseExistingConfig.databaseExistingHostName]",
+            "dbExistingPort": "[steps('databaseConfiguration').databaseExistingConfig.databaseExistingPort]",
+            "dbExistingName": "[steps('databaseConfiguration').databaseExistingConfig.databaseExistingName]",
+            "dbExistingUser": "[steps('databaseConfiguration').databaseExistingConfig.infaDomainExistingDBUser]",
+            "dbExistingPassword": "[steps('databaseConfiguration').databaseExistingConfig.infaDomainExistingDBPassword]",
+            "dbExistingTablespace": "[steps('databaseConfiguration').databaseExistingConfig.databaseExistingTablespace]",
             "storageName": "[steps('infraConfiguration').storageAccount.name]",
             "storageType": "[steps('infraConfiguration').storageAccount.type]",
             "storageExistingOrNew": "[steps('infraConfiguration').storageAccount.newOrExisting]",
