@@ -147,7 +147,7 @@
                                     "regex": "^[a-z0-9A-Z_]{3,30}$",
                                     "validationMessage": "Only alphanumeric characters and underscore are allowed. The value must be 3-30"
                                 },
-                                "visible": "[equals(steps('infaDomainConfiguration').pcServiceCreateOrSkip, 'create')]"
+                                "visible": "[equals(steps('infaDomainConfiguration').domainServiceConfig.pcServiceCreateOrSkip, 'create')]"
                             },
                             { 
                                 "name": "pcIntegrationServiceName",
@@ -160,7 +160,7 @@
                                     "regex": "^[a-z0-9A-Z_]{3,30}$",
                                     "validationMessage": "Only alphanumeric characters and underscore are allowed. The value must be 3-30"
                                 },
-                                "visible": "[equals(steps('infaDomainConfiguration').pcServiceCreateOrSkip, 'create')]"
+                                "visible": "[equals(steps('infaDomainConfiguration').domainServiceConfig.pcServiceCreateOrSkip, 'create')]"
                             }
                         ]
                     }
