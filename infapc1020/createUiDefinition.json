@@ -117,12 +117,12 @@
                         "type": "Microsoft.Common.Section",
                         "label": "Service configuration",
                         "elements": [
-                             {
+                            {
                                 "name": "pcServiceCreateOrSkip",
                                 "type": "Microsoft.Common.OptionsGroup",
                                 "label": "PowerCenter service",
-                                "defaultValue": "New",
-                                "toolTip": "Choose option New if database has to be created or Existing to use existing database on Azure",
+                                "defaultValue": "Create",
+                                "toolTip": "Choose option Create if PowerCenter Repository and Integration service has to be created or Skip to if you want to create it later",
                                 "constraints": {
                                     "allowedValues": [
                                         {
@@ -135,6 +135,32 @@
                                         }
                                     ]
                                 }
+                            },
+                            {
+                                "name": "pcRepositoryServiceName",
+                                "type": "Microsoft.Common.TextBox",
+                                "label": "PowerCenter Repository service name",
+                                "defaultValue": "PCRS",
+                                "toolTip": "Specify a name for the Repository service",
+                                "constraints": {
+                                    "required": true,
+                                    "regex": "^[a-z0-9A-Z_]{3,30}$",
+                                    "validationMessage": "Only alphanumeric characters and underscore are allowed. The value must be 3-30"
+                                },
+                                "visible": "[equals(steps('infaDomainConfiguration').pcServiceCreateOrSkip, 'create')]"
+                            },
+                            { 
+                                "name": "pcIntegrationServiceName",
+                                "type": "Microsoft.Common.TextBox",
+                                "label": "PowerCenter Integration service name",
+                                "defaultValue": "PCIS",
+                                "toolTip": "Specify a name for the Integration service",
+                                "constraints": {
+                                    "required": true,
+                                    "regex": "^[a-z0-9A-Z_]{3,30}$",
+                                    "validationMessage": "Only alphanumeric characters and underscore are allowed. The value must be 3-30"
+                                },
+                                "visible": "[equals(steps('infaDomainConfiguration').pcServiceCreateOrSkip, 'create')]"
                             }
                         ]
                     }
@@ -672,12 +698,12 @@
             "nodeVMAdminSshPublicKey": "[steps('nodeVMConfiguration').nodeVMAdminPasswordLin.sshPublicKey]",
             "nodeVMSize": "[coalesce(steps('nodeVMConfiguration').nodeVMSizeWin, steps('nodeVMConfiguration').nodeVMSizeLin)]",
             "nodeVMOS": "[steps('nodeVMConfiguration').nodeVMOS]",
-            "infaVersion": "[steps('infaDomainConfiguration').infaVersion]",
-            "infaDomainName": "[steps('infaDomainConfiguration').infaDomainName]",
-            "infaDomainUser": "[steps('infaDomainConfiguration').infaDomainUser]",
-            "infaDomainPassword": "[steps('infaDomainConfiguration').infaDomainPassword]",
-            "infaDomainLicense": "[steps('infaDomainConfiguration').infaDomainLicense]",
-            "infaKeyword": "[steps('infaDomainConfiguration').infaDomainEncryptionKeyword]",
+            "infaVersion": "[steps('infaDomainConfiguration').domainConfig.infaVersion]",
+            "infaDomainName": "[steps('infaDomainConfiguration').domainConfig.infaDomainName]",
+            "infaDomainUser": "[steps('infaDomainConfiguration').domainConfig.infaDomainUser]",
+            "infaDomainPassword": "[steps('infaDomainConfiguration').domainConfig.infaDomainPassword]",
+            "infaDomainLicense": "[steps('infaDomainConfiguration').domainConfig.infaDomainLicense]",
+            "infaKeyword": "[steps('infaDomainConfiguration').domainConfig.infaDomainEncryptionKeyword]",
             "dbNewOrExisting": "[steps('databaseConfiguration').databaseNewOrExisting]",
             "dbVMName": "[steps('databaseConfiguration').databaseConfig.databaseHostName]",
             "dbVMSize": "[steps('databaseConfiguration').databaseConfig.databaseVMSize]",
