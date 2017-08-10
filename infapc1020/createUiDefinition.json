@@ -511,9 +511,9 @@
                         "visible": "[equals(steps('databaseConfiguration').databaseNewOrExisting, 'new')]"
                     },
                     {
-                        "name": "databaseUser",
+                        "name": "domainDatabaseUser",
                         "type": "Microsoft.Common.Section",
-                        "label": "Database user",
+                        "label": "Domain database user",
                         "elements": [
                             {
                                 "name": "infaDomainDBUser",
@@ -545,6 +545,42 @@
                             }
                         ],
                         "visible": "[equals(steps('databaseConfiguration').databaseNewOrExisting, 'new')]"
+                    },
+                    {
+                        "name": "serviceDatabaseUser",
+                        "type": "Microsoft.Common.Section",
+                        "label": "Service database user",
+                        "elements": [
+                            {
+                                "name": "infaPCServiceDBUser",
+                                "type": "Microsoft.Common.TextBox",
+                                "label": "Informatica PowerCenter Repository DB user",
+                                "defaultValue": "",
+                                "toolTip": "Database user to create PowerCenter Repository metadata",
+                                "constraints": {
+                                    "required": true,
+                                    "regex": "(?!^(p|P)(u|U)(b|B)(l|L)(i|I)(c|C)$)(?!^(d|D)(b|B)(o|O)$)(?!^(s|S)(y|Y)(s|S)$)(?!^(g|G)(u|U)(e|E)(s|S)(t|T)$)(^[a-zA-Z][a-zA-Z0-9_-]{2,127}.*$)",
+                                    "validationMessage": "Username must begin with an alphabet, only alphanumeric characters, hyphen and underscore are allowed, and the value must be 3-128 characters in length. Usernames sa, public, dbo, sys, and guest are not allowed"
+                                }
+                            },
+                            {
+                                "name": "infaPCServiceDBPassword",
+                                "type": "Microsoft.Common.PasswordBox",
+                                "label": {
+                                    "password": "Informatica PowerCenter Repository DB password",
+                                    "confirmPassword": "Confirm Informatica PowerCenter Repository DB password"
+                                },
+                                "constraints": {
+                                    "required": true,
+                                    "regex": "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[^\\s\\w])(?!.*[\"$]).{8,123}$",
+                                    "validationMessage": "Password must be at least 8 characters in length. Should contain at least one special character, number, upper-case and lower-case character. Double quote(\") and dollar($) is not allowed"
+                                },
+                                "options": {
+                                    "hideConfirmation": false
+                                }
+                            }
+                        ],
+                        "visible": "[and(equals(steps('databaseConfiguration').databaseNewOrExisting, 'new'), equals(steps('infaDomainConfiguration').domainServiceConfig.pcServiceCreateOrSkip, 'create'))]"
                     },
                     {
                         "name": "databaseExistingConfig",
