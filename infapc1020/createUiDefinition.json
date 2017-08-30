@@ -669,7 +669,7 @@
                                             "required": true
                                         },
                                         "options": {
-                                            "hideConfirmation": false
+                                            "hideConfirmation": true
                                         }
                                     }  
                                 ]
@@ -700,11 +700,11 @@
                                             "required": true
                                         },
                                         "options": {
-                                            "hideConfirmation": false
+                                            "hideConfirmation": true
                                         }
                                     }
                                 ],
-                                "visible": "[and(equals(steps('databaseConfiguration').databaseNewOrExisting, 'new'), equals(steps('infaDomainConfiguration').domainServiceConfig.pcServiceCreateOrSkip, 'create'))]"
+                                "visible": "[equals(steps('infaDomainConfiguration').domainServiceConfig.pcServiceCreateOrSkip, 'create'))]"
                             }
                         ],
                         "visible": "[equals(steps('databaseConfiguration').databaseNewOrExisting, 'existing')]"
