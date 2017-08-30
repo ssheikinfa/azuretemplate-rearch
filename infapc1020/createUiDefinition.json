@@ -149,7 +149,7 @@
                                 },
                                 "visible": "[equals(steps('infaDomainConfiguration').domainServiceConfig.pcServiceCreateOrSkip, 'create')]"
                             },
-                            { 
+                            {
                                 "name": "pcIntegrationServiceName",
                                 "type": "Microsoft.Common.TextBox",
                                 "label": "PowerCenter Integration service name",
@@ -554,7 +554,7 @@
                             {
                                 "name": "infaPCServiceDBUser",
                                 "type": "Microsoft.Common.TextBox",
-                                "label": "Informatica PowerCenter Repository DB user",
+                                "label": "Informatica Repository DB user",
                                 "defaultValue": "",
                                 "toolTip": "Database user to create PowerCenter Repository metadata",
                                 "constraints": {
@@ -567,8 +567,8 @@
                                 "name": "infaPCServiceDBPassword",
                                 "type": "Microsoft.Common.PasswordBox",
                                 "label": {
-                                    "password": "Informatica PowerCenter Repository DB password",
-                                    "confirmPassword": "Confirm Informatica PowerCenter Repository DB password"
+                                    "password": "Informatica Repository DB password",
+                                    "confirmPassword": "Confirm Informatica Repository DB password"
                                 },
                                 "constraints": {
                                     "required": true,
@@ -609,6 +609,7 @@
                                     ]
                                 }
                             },
+
                             {
                                 "name": "databaseExistingHostName",
                                 "type": "Microsoft.Common.TextBox",
@@ -634,28 +635,6 @@
                                 }
                             },
                             {
-                                "name": "infaDomainExistingDBUser",
-                                "type": "Microsoft.Common.TextBox",
-                                "label": "Database user",
-                                "constraints": {
-                                    "required": true
-                                }
-                            },
-                            {
-                                "name": "infaDomainExistingDBPassword",
-                                "type": "Microsoft.Common.PasswordBox",
-                                "label": {
-                                    "password": "Database password",
-                                    "confirmPassword": "Confirm Informatica domain DB password"
-                                },
-                                "constraints": {
-                                    "required": true
-                                },
-                                "options": {
-                                    "hideConfirmation": true
-                                }
-                            },
-                            {
                                 "name": "databaseExistingTablespace",
                                 "type": "Microsoft.Common.TextBox",
                                 "label": "DB2 database tablespace name",
@@ -663,6 +642,69 @@
                                     "required": false
                                 },
                                 "visible": "[equals(steps('databaseConfiguration').databaseExistingConfig.databaseExistingType, 'db2')]"
+                            },
+                            {
+                                "name": "domainExistingDatabaseUser",
+                                "type": "Microsoft.Common.Section",
+                                "label": "Domain database user",
+                                "elements": [
+                                    {
+                                        "name": "infaExistingDomainDBUser",
+                                        "type": "Microsoft.Common.TextBox",
+                                        "label": "Informatica domain DB user",
+                                        "defaultValue": "",
+                                        "toolTip": "Database user needed for communication between Domain and Database",
+                                        "constraints": {
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "name": "infaExistingDomainDBPassword",
+                                        "type": "Microsoft.Common.PasswordBox",
+                                        "label": {
+                                            "password": "Informatica domain DB password",
+                                            "confirmPassword": "Confirm Informatica domain DB password"
+                                         },
+                                        "constraints": {
+                                            "required": true
+                                        },
+                                        "options": {
+                                            "hideConfirmation": false
+                                        }
+                                    }  
+                                ]
+                            },
+                            {
+                                "name": "serviceDatabaseUser",
+                                "type": "Microsoft.Common.Section",
+                                "label": "Service database user",
+                                "elements": [
+                                    {
+                                        "name": "infaPCServiceExistingDBUser",
+                                        "type": "Microsoft.Common.TextBox",
+                                        "label": "Informatica Repository DB user",
+                                        "defaultValue": "",
+                                        "toolTip": "Database user to create PowerCenter Repository metadata",
+                                        "constraints": {
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "name": "infaPCServiceExistingDBPassword",
+                                        "type": "Microsoft.Common.PasswordBox",
+                                        "label": {
+                                            "password": "Informatica Repository DB password",
+                                            "confirmPassword": "Confirm Informatica Repository DB password"
+                                        },
+                                        "constraints": {
+                                            "required": true
+                                        },
+                                        "options": {
+                                            "hideConfirmation": false
+                                        }
+                                    }
+                                ],
+                                "visible": "[and(equals(steps('databaseConfiguration').databaseNewOrExisting, 'new'), equals(steps('infaDomainConfiguration').domainServiceConfig.pcServiceCreateOrSkip, 'create'))]"
                             }
                         ],
                         "visible": "[equals(steps('databaseConfiguration').databaseNewOrExisting, 'existing')]"
