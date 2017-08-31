@@ -704,7 +704,7 @@
                                         }
                                     }
                                 ],
-                                "visible": "[equals(steps('infaDomainConfiguration').domainServiceConfig.pcServiceCreateOrSkip, 'create'))]"
+                                "visible": "[equals(steps('infaDomainConfiguration').domainServiceConfig.pcServiceCreateOrSkip, 'create')]"
                             }
                         ],
                         "visible": "[equals(steps('databaseConfiguration').databaseNewOrExisting, 'existing')]"
@@ -783,21 +783,18 @@
             "infaDomainLicense": "[steps('infaDomainConfiguration').domainConfig.infaDomainLicense]",
             "infaKeyword": "[steps('infaDomainConfiguration').domainConfig.infaDomainEncryptionKeyword]",
             "dbNewOrExisting": "[steps('databaseConfiguration').databaseNewOrExisting]",
-            "dbVMName": "[steps('databaseConfiguration').databaseConfig.databaseHostName]",
+            "dbVMName": "[coalesce(steps('databaseConfiguration').databaseConfig.databaseHostName, steps('databaseConfiguration').databaseExistingConfig.databaseExistingHostName)]",
             "dbVMSize": "[steps('databaseConfiguration').databaseConfig.databaseVMSize]",
-            "dbType": "[steps('databaseConfiguration').databaseConfig.databaseType]",
-            "dbName": "[steps('databaseConfiguration').databaseConfig.databaseName]",
+            "dbType": "[coalesce(steps('databaseConfiguration').databaseConfig.databaseType, steps('databaseConfiguration').databaseExistingConfig.databaseExistingType)]",
+            "dbName": "[coalesce(steps('databaseConfiguration').databaseConfig.databaseName, steps('databaseConfiguration').databaseExistingConfig.databaseExistingName)]",
             "dbVMAdminUsername": "[steps('databaseConfiguration').databaseConfig.dbVMAdminUsername]",
             "dbVMAdminPassword": "[steps('databaseConfiguration').databaseConfig.dbVMAdminPassword.password]",
-            "dbUser": "[steps('databaseConfiguration').databaseUser.infaDomainDBUser]",
-            "dbPassword": "[steps('databaseConfiguration').databaseUser.infaDomainDBPassword]",
-            "dbExistingType": "[steps('databaseConfiguration').databaseExistingConfig.databaseExistingType]",
-            "dbExistingHost": "[steps('databaseConfiguration').databaseExistingConfig.databaseExistingHostName]",
-            "dbExistingPort": "[steps('databaseConfiguration').databaseExistingConfig.databaseExistingPort]",
-            "dbExistingName": "[steps('databaseConfiguration').databaseExistingConfig.databaseExistingName]",
-            "dbExistingUser": "[steps('databaseConfiguration').databaseExistingConfig.infaDomainExistingDBUser]",
-            "dbExistingPassword": "[steps('databaseConfiguration').databaseExistingConfig.infaDomainExistingDBPassword]",
-            "dbExistingTablespace": "[steps('databaseConfiguration').databaseExistingConfig.databaseExistingTablespace]",
+            "dbUser": "[coalesce(steps('databaseConfiguration').databaseUser.infaDomainDBUser, steps('databaseConfiguration').databaseExistingConfig.infaDomainExistingDBUser)]",
+            "dbPassword": "[coalesce(steps('databaseConfiguration').databaseUser.infaDomainDBPassword, steps('databaseConfiguration').databaseExistingConfig.infaDomainExistingDBPassword)]",
+            "pcDBUser": "[coalesce(steps('databaseConfiguration').databaseUser.infaPCServiceDBUser, steps('databaseConfiguration').databaseExistingConfig.infaPCServiceExistingDBUser)]",
+			"pcDBPassword": "[coalesce(steps('databaseConfiguration').databaseUser.infaPCServiceDBPassword, steps('databaseConfiguration').databaseExistingConfig.infaPCServiceExistingDBPassword)]",
+			"dbPort": "[steps('databaseConfiguration').databaseExistingConfig.databaseExistingPort]",
+            "dbTablespace": "[steps('databaseConfiguration').databaseExistingConfig.databaseExistingTablespace]",
             "storageName": "[steps('infraConfiguration').storageAccount.name]",
             "storageType": "[steps('infraConfiguration').storageAccount.type]",
             "storageExistingOrNew": "[steps('infraConfiguration').storageAccount.newOrExisting]",

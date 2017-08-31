@@ -217,7 +217,7 @@
                         "caching": "ReadWrite",
                         "createOption": "FromImage",
                         "vhd": {
-                            "uri": "[concat('https://', parameters('storageName'), '.blob.core.windows.net/vhds/', parameters('nodeVMNamePrefix'), uniqueString(resourceGroup().id, deployment().name), '1', '.osdisk.vhd')]"
+                            "uri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', parameters('storageName'))).primaryEndpoints.blob, '/vhds/', parameters('nodeVMNamePrefix'), uniqueString(resourceGroup().id, deployment().name), '1', '.osdisk.vhd')]"
                         }
                     }
                 },
@@ -369,7 +369,7 @@
                         "caching": "ReadWrite",
                         "createOption": "FromImage",
                         "vhd": {
-                            "uri": "[concat('https://', parameters('storageName'), '.blob.core.windows.net/vhds/', parameters('nodeVMNamePrefix'), uniqueString(resourceGroup().id, deployment().name), add(copyIndex(), 2), '.osdisk.vhd')]"
+                            "uri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', parameters('storageName'))).primaryEndpoints.blob, '/vhds/', parameters('nodeVMNamePrefix'), uniqueString(resourceGroup().id, deployment().name), add(copyIndex(), 2), '.osdisk.vhd')]"
                         }
                     }
                 },
