@@ -583,33 +583,33 @@
                         "visible": "[and(equals(steps('databaseConfiguration').databaseNewOrExisting, 'new'), equals(steps('infaDomainConfiguration').domainServiceConfig.pcServiceCreateOrSkip, 'create'))]"
                     },
                     {
+                        "name": "databaseExistingType",
+                        "type": "Microsoft.Common.DropDown",
+                        "label": "Database type",
+                        "defaultValue": "SQL Server",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "SQL Server",
+                                    "value": "sqlserver"
+                                },
+                                {
+                                    "label": "Oracle",
+                                    "value": "oracle"
+                                },
+                                {
+                                    "label": "DB2",
+                                    "value": "db2"
+                                }
+                            ]
+                        },
+                        "visible": "[equals(steps('databaseConfiguration').databaseNewOrExisting, 'existing')]"
+                    },
+                    {
                         "name": "databaseExistingConfig",
                         "type": "Microsoft.Common.Section",
                         "label": "Database configuration",
                         "elements": [
-                            {
-                                "name": "databaseExistingType",
-                                "type": "Microsoft.Common.DropDown",
-                                "label": "Database type",
-                                "defaultValue": "SQL Server",
-                                "constraints": {
-                                    "allowedValues": [
-                                        {
-                                            "label": "SQL Server",
-                                            "value": "sqlserver"
-                                        },
-                                        {
-                                            "label": "Oracle",
-                                            "value": "oracle"
-                                        },
-                                        {
-                                            "label": "DB2",
-                                            "value": "db2"
-                                        }
-                                    ]
-                                }
-                            },
-
                             {
                                 "name": "databaseExistingHostName",
                                 "type": "Microsoft.Common.TextBox",
@@ -641,73 +641,66 @@
                                 "constraints": {
                                     "required": false
                                 },
-                                "visible": "[equals(steps('databaseConfiguration').databaseExistingConfig.databaseExistingType, 'db2')]"
+                                "visible": "[equals(steps('databaseConfiguration').databaseExistingType, 'db2')]"
                             },
                             {
-                                "name": "domainExistingDatabaseUser",
-                                "type": "Microsoft.Common.Section",
-                                "label": "Domain database user",
-                                "elements": [
-                                    {
-                                        "name": "infaExistingDomainDBUser",
-                                        "type": "Microsoft.Common.TextBox",
-                                        "label": "Informatica domain DB user",
-                                        "defaultValue": "",
-                                        "toolTip": "Database user needed for communication between Domain and Database",
-                                        "constraints": {
-                                            "required": true
-                                        }
-                                    },
-                                    {
-                                        "name": "infaExistingDomainDBPassword",
-                                        "type": "Microsoft.Common.PasswordBox",
-                                        "label": {
-                                            "password": "Informatica domain DB password",
-                                            "confirmPassword": "Confirm Informatica domain DB password"
-                                         },
-                                        "constraints": {
-                                            "required": true
-                                        },
-                                        "options": {
-                                            "hideConfirmation": true
-                                        }
-                                    }  
-                                ]
+                                "name": "infaExistingDomainDBUser",
+                                "type": "Microsoft.Common.TextBox",
+                                "label": "Informatica domain DB user",
+                                "defaultValue": "",
+                                "toolTip": "Database user needed for communication between Domain and Database",
+                                "constraints": {
+                                    "required": true
+                                }
                             },
                             {
-                                "name": "serviceDatabaseUser",
-                                "type": "Microsoft.Common.Section",
-                                "label": "Service database user",
-                                "elements": [
-                                    {
-                                        "name": "infaPCServiceExistingDBUser",
-                                        "type": "Microsoft.Common.TextBox",
-                                        "label": "Informatica Repository DB user",
-                                        "defaultValue": "",
-                                        "toolTip": "Database user to create PowerCenter Repository metadata",
-                                        "constraints": {
-                                            "required": true
-                                        }
-                                    },
-                                    {
-                                        "name": "infaPCServiceExistingDBPassword",
-                                        "type": "Microsoft.Common.PasswordBox",
-                                        "label": {
-                                            "password": "Informatica Repository DB password",
-                                            "confirmPassword": "Confirm Informatica Repository DB password"
-                                        },
-                                        "constraints": {
-                                            "required": true
-                                        },
-                                        "options": {
-                                            "hideConfirmation": true
-                                        }
-                                    }
-                                ],
-                                "visible": "[equals(steps('infaDomainConfiguration').domainServiceConfig.pcServiceCreateOrSkip, 'create')]"
+                                "name": "infaExistingDomainDBPassword",
+                                "type": "Microsoft.Common.PasswordBox",
+                                "label": {
+                                    "password": "Informatica domain DB password",
+                                    "confirmPassword": "Confirm Informatica domain DB password"
+                                },
+                                "constraints": {
+                                    "required": true
+                                },
+                                "options": {
+                                    "hideConfirmation": true
+                                }
                             }
                         ],
                         "visible": "[equals(steps('databaseConfiguration').databaseNewOrExisting, 'existing')]"
+                    },
+                    {
+                        "name": "serviceDatabaseUser",
+                        "type": "Microsoft.Common.Section",
+                        "label": "Service database user",
+                        "elements": [
+                            {
+                                "name": "infaPCServiceExistingDBUser",
+                                "type": "Microsoft.Common.TextBox",
+                                "label": "Informatica Repository DB user",
+                                "defaultValue": "",
+                                "toolTip": "Database user to create PowerCenter Repository metadata",
+                                "constraints": {
+                                    "required": true
+                                }
+                            },
+                            {
+                                "name": "infaPCServiceExistingDBPassword",
+                                "type": "Microsoft.Common.PasswordBox",
+                                "label": {
+                                    "password": "Informatica Repository DB password",
+                                    "confirmPassword": "Confirm Informatica Repository DB password"
+                                 },
+                                 "constraints": {
+                                    "required": true
+                                 },
+                                 "options": {
+                                    "hideConfirmation": true
+                                 }
+                            }
+                        ],
+                        "visible": "[and(equals(steps('databaseConfiguration').databaseNewOrExisting, 'existing'), equals(steps('infaDomainConfiguration').domainServiceConfig.pcServiceCreateOrSkip, 'create'))]"
                     }
                 ]
             },
@@ -785,15 +778,15 @@
             "dbNewOrExisting": "[steps('databaseConfiguration').databaseNewOrExisting]",
             "dbVMName": "[coalesce(steps('databaseConfiguration').databaseConfig.databaseHostName, steps('databaseConfiguration').databaseExistingConfig.databaseExistingHostName)]",
             "dbVMSize": "[steps('databaseConfiguration').databaseConfig.databaseVMSize]",
-            "dbType": "[coalesce(steps('databaseConfiguration').databaseConfig.databaseType, steps('databaseConfiguration').databaseExistingConfig.databaseExistingType)]",
+            "dbType": "[coalesce(steps('databaseConfiguration').databaseConfig.databaseType, steps('databaseConfiguration').databaseExistingType)]",
             "dbName": "[coalesce(steps('databaseConfiguration').databaseConfig.databaseName, steps('databaseConfiguration').databaseExistingConfig.databaseExistingName)]",
             "dbVMAdminUsername": "[steps('databaseConfiguration').databaseConfig.dbVMAdminUsername]",
             "dbVMAdminPassword": "[steps('databaseConfiguration').databaseConfig.dbVMAdminPassword.password]",
             "dbUser": "[coalesce(steps('databaseConfiguration').databaseUser.infaDomainDBUser, steps('databaseConfiguration').databaseExistingConfig.infaDomainExistingDBUser)]",
             "dbPassword": "[coalesce(steps('databaseConfiguration').databaseUser.infaDomainDBPassword, steps('databaseConfiguration').databaseExistingConfig.infaDomainExistingDBPassword)]",
             "pcDBUser": "[coalesce(steps('databaseConfiguration').databaseUser.infaPCServiceDBUser, steps('databaseConfiguration').databaseExistingConfig.infaPCServiceExistingDBUser)]",
-			"pcDBPassword": "[coalesce(steps('databaseConfiguration').databaseUser.infaPCServiceDBPassword, steps('databaseConfiguration').databaseExistingConfig.infaPCServiceExistingDBPassword)]",
-			"dbPort": "[steps('databaseConfiguration').databaseExistingConfig.databaseExistingPort]",
+            "pcDBPassword": "[coalesce(steps('databaseConfiguration').databaseUser.infaPCServiceDBPassword, steps('databaseConfiguration').databaseExistingConfig.infaPCServiceExistingDBPassword)]",
+            "dbPort": "[steps('databaseConfiguration').databaseExistingConfig.databaseExistingPort]",
             "dbTablespace": "[steps('databaseConfiguration').databaseExistingConfig.databaseExistingTablespace]",
             "storageName": "[steps('infraConfiguration').storageAccount.name]",
             "storageType": "[steps('infraConfiguration').storageAccount.type]",
