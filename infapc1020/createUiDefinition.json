@@ -642,7 +642,15 @@
                                     "required": false
                                 },
                                 "visible": "[equals(steps('databaseConfiguration').databaseExistingType, 'db2')]"
-                            },
+                            }
+                        ],
+                        "visible": "[equals(steps('databaseConfiguration').databaseNewOrExisting, 'existing')]"
+                    },
+                    {
+                        "name": "domainExistingDatabaseUser",
+                        "type": "Microsoft.Common.Section",
+                        "label": "Domain database user",
+                        "elements": [
                             {
                                 "name": "infaExistingDomainDBUser",
                                 "type": "Microsoft.Common.TextBox",
@@ -782,8 +790,8 @@
             "dbName": "[coalesce(steps('databaseConfiguration').databaseConfig.databaseName, steps('databaseConfiguration').databaseExistingConfig.databaseExistingName)]",
             "dbVMAdminUsername": "[steps('databaseConfiguration').databaseConfig.dbVMAdminUsername]",
             "dbVMAdminPassword": "[steps('databaseConfiguration').databaseConfig.dbVMAdminPassword.password]",
-            "dbUser": "[coalesce(steps('databaseConfiguration').domainDatabaseUser.infaDomainDBUser, steps('databaseConfiguration').databaseExistingConfig.infaDomainExistingDBUser)]",
-            "dbPassword": "[coalesce(steps('databaseConfiguration').domainDatabaseUser.infaDomainDBPassword, steps('databaseConfiguration').databaseExistingConfig.infaDomainExistingDBPassword)]",
+            "dbUser": "[coalesce(steps('databaseConfiguration').domainDatabaseUser.infaDomainDBUser, steps('databaseConfiguration').domainExistingDatabaseUser.infaDomainExistingDBUser)]",
+            "dbPassword": "[coalesce(steps('databaseConfiguration').domainDatabaseUser.infaDomainDBPassword, steps('databaseConfiguration').domainExistingDatabaseUser.infaDomainExistingDBPassword)]",
             "pcDBUser": "[coalesce(steps('databaseConfiguration').serviceDatabaseUser.infaPCServiceDBUser, steps('databaseConfiguration').serviceExistingDatabaseUser.infaPCServiceExistingDBUser)]",
             "pcDBPassword": "[coalesce(steps('databaseConfiguration').serviceDatabaseUser.infaPCServiceDBPassword, steps('databaseConfiguration').serviceExistingDatabaseUser.infaPCServiceExistingDBPassword)]",
             "dbPort": "[steps('databaseConfiguration').databaseExistingConfig.databaseExistingPort]",
