@@ -91,6 +91,20 @@
             ],
             "defaultValue": "new"
         },
+        "dbVMName": {
+            "type": "string",
+            "defaultValue": "DVM",
+            "metadata": {
+                "description": "Database VM name"
+            }
+        },
+        "dbVMSize": {
+            "type": "string",
+            "defaultValue": "Standard_D3",
+            "metadata": {
+                "description": "Database VM size"
+            }
+        },
         "dbType": {
             "type": "string",
             "allowedValues": [
@@ -100,13 +114,6 @@
             "defaultValue": "sqlserver2014",
             "metadata": {
                 "description": "Database type. Only SQL Server 2014 and 2016 on VM is supported for now"
-            }
-        },
-        "dbVMName": {
-            "type": "string",
-            "defaultValue": "DVM",
-            "metadata": {
-                "description": "Database VM name"
             }
         },
         "dbVMAdminUsername": {
@@ -121,13 +128,6 @@
             "defaultValue": "",
             "metadata": {
                 "description": "Database VM password"
-            }
-        },
-        "dbVMSize": {
-            "type": "string",
-            "defaultValue": "Standard_D3",
-            "metadata": {
-                "description": "Database VM size"
             }
         },
         "dbUser": {
@@ -158,17 +158,31 @@
                 "description": "Database user password for Informatica PowerCenter Repository service"
             }
         },
-        "dbName": {
+        "dbPort": {
             "type": "string",
             "metadata": {
-                "description": "Database name for Informatica domain"
+                "description": "Database port"
             }
         },
-        "nodeVMSize": {
+        "dbTablespace": {
             "type": "string",
-            "defaultValue": "Standard_D11",
             "metadata": {
-                "description": "Node VM size"
+                "description": "Database tablespace"
+            }
+        },
+        "nodeVMCount": {
+            "type": "string",
+            "defaultValue": "1",
+            "metadata": {
+                "description": "Node VM count"
+            }
+        },
+        "nodeVMNamePrefix": {
+            "type": "string",
+            "minLength": 1,
+            "defaultValue": "NVM",
+            "metadata": {
+                "description": "Node VM name prefix"
             }
         },
         "nodeVMAuthType": {
@@ -176,13 +190,6 @@
             "defaultValue": "password",
             "metadata": {
                 "description": "Node VM authenication type"
-            }
-        },
-        "nodeVMOS": {
-            "type": "string",
-            "defaultValue": "",
-            "metadata": {
-                "description": "Node VM OS"
             }
         },
         "nodeVMAdminUsername": {
@@ -207,19 +214,18 @@
                 "description": "Node VM sshPublicKey"
             }
         },
-        "nodeVMNamePrefix": {
+        "nodeVMSize": {
             "type": "string",
-            "minLength": 1,
-            "defaultValue": "NVM",
+            "defaultValue": "Standard_D11",
             "metadata": {
-                "description": "Node VM name prefix"
+                "description": "Node VM size"
             }
         },
-        "nodeVMCount": {
+        "nodeVMOS": {
             "type": "string",
-            "defaultValue": "2",
+            "defaultValue": "",
             "metadata": {
-                "description": "Node VM count"
+                "description": "Node VM OS"
             }
         },
         "infaVersion": {
@@ -261,11 +267,10 @@
                 "description": "Informatica domain encryption key keyphrase"
             }
         },
-        "infaDomainLicense": {
-            "type": "securestring",
-            "defaultValue": "nolicense",
+        "infaPCSkipOrCreate": {
+            "type": "string",
             "metadata": {
-                "description": "Informatica domain license key file url"
+                "description": "Informatica PowerCenter service should be created or not"
             }
         },
         "infaPCRSName": {
@@ -282,6 +287,13 @@
                 "description": "Informatica PowerCenter Integration service name"
             }
         },
+        "infaDomainLicense": {
+            "type": "securestring",
+            "defaultValue": "nolicense",
+            "metadata": {
+                "description": "Informatica domain license key file url"
+            }
+        },
         "baseUrl": {
             "type": "string",
             "metadata": {
@@ -293,7 +305,7 @@
         "informaticaTags": {
             "type": "object",
             "defaultValue": {
-                "provider": "AACF690D-C725-4C78-9B1E-ABCDEFGHIJK"
+                "provider": "AACF690D-C725-4C78-9B1E-E586595B369F"
             }
         }
     },

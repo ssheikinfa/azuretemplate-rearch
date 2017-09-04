@@ -198,7 +198,7 @@
                         "name": "domainNodeCount",
                         "type": "Microsoft.Common.TextBox",
                         "label": "Number of nodes",
-                        "defaultValue": "2",
+                        "defaultValue": "1",
                         "toolTip": "Number of nodes required in the Informatica domain. Allowed number of nodes is 1 to 30",
                         "constraints": {
                             "required": true,
@@ -688,7 +688,7 @@
                                 "type": "Microsoft.Common.TextBox",
                                 "label": "Informatica Repository DB user",
                                 "defaultValue": "",
-                                "toolTip": "Database user to create PowerCenter Repository metadata",
+                                "toolTip": "Database user needed to create PowerCenter Repository metadata",
                                 "constraints": {
                                     "required": true
                                 }
@@ -769,6 +769,7 @@
 
         "outputs": {
             "location": "[location()]",
+
             "nodeVMCount": "[steps('nodeVMConfiguration').domainNodeCount]",
             "nodeVMNamePrefix": "[steps('nodeVMConfiguration').nodeVMPrefix]",
             "nodeVMAuthType": "[coalesce(steps('nodeVMConfiguration').nodeVMAdminPasswordWin.authenticationType, steps('nodeVMConfiguration').nodeVMAdminPasswordLin.authenticationType)]",
@@ -777,12 +778,18 @@
             "nodeVMAdminSshPublicKey": "[steps('nodeVMConfiguration').nodeVMAdminPasswordLin.sshPublicKey]",
             "nodeVMSize": "[coalesce(steps('nodeVMConfiguration').nodeVMSizeWin, steps('nodeVMConfiguration').nodeVMSizeLin)]",
             "nodeVMOS": "[steps('nodeVMConfiguration').nodeVMOS]",
+
             "infaVersion": "[steps('infaDomainConfiguration').domainConfig.infaVersion]",
             "infaDomainName": "[steps('infaDomainConfiguration').domainConfig.infaDomainName]",
             "infaDomainUser": "[steps('infaDomainConfiguration').domainConfig.infaDomainUser]",
             "infaDomainPassword": "[steps('infaDomainConfiguration').domainConfig.infaDomainPassword]",
-            "infaDomainLicense": "[steps('infaDomainConfiguration').domainConfig.infaDomainLicense]",
             "infaKeyword": "[steps('infaDomainConfiguration').domainConfig.infaDomainEncryptionKeyword]",
+            "infaPCSkipOrCreate": "[steps('infaDomainConfiguration').domainServiceConfig.pcServiceCreateOrSkip]",
+            "infaPCRSName": "[steps('infaDomainConfiguration').domainServiceConfig.pcRepositoryServiceName]",
+            "infaPCISName": "[steps('infaDomainConfiguration').domainServiceConfig.pcIntegrationServiceName]",
+            "infaDomainLicense": "[steps('infaDomainConfiguration').domainConfig.infaDomainLicense]",
+            
+
             "dbNewOrExisting": "[steps('databaseConfiguration').databaseNewOrExisting]",
             "dbVMName": "[coalesce(steps('databaseConfiguration').databaseConfig.databaseHostName, steps('databaseConfiguration').databaseExistingConfig.databaseExistingHostName)]",
             "dbVMSize": "[steps('databaseConfiguration').databaseConfig.databaseVMSize]",
@@ -792,18 +799,20 @@
             "dbVMAdminPassword": "[steps('databaseConfiguration').databaseConfig.dbVMAdminPassword.password]",
             "dbUser": "[coalesce(steps('databaseConfiguration').domainDatabaseUser.infaDomainDBUser, steps('databaseConfiguration').domainExistingDatabaseUser.infaDomainExistingDBUser)]",
             "dbPassword": "[coalesce(steps('databaseConfiguration').domainDatabaseUser.infaDomainDBPassword, steps('databaseConfiguration').domainExistingDatabaseUser.infaDomainExistingDBPassword)]",
-            "pcDBUser": "[coalesce(steps('databaseConfiguration').serviceDatabaseUser.infaPCServiceDBUser, steps('databaseConfiguration').serviceExistingDatabaseUser.infaPCServiceExistingDBUser)]",
-            "pcDBPassword": "[coalesce(steps('databaseConfiguration').serviceDatabaseUser.infaPCServiceDBPassword, steps('databaseConfiguration').serviceExistingDatabaseUser.infaPCServiceExistingDBPassword)]",
+            "dbPCRSUser": "[coalesce(steps('databaseConfiguration').serviceDatabaseUser.infaPCServiceDBUser, steps('databaseConfiguration').serviceExistingDatabaseUser.infaPCServiceExistingDBUser)]",
+            "dbPCRSPassword": "[coalesce(steps('databaseConfiguration').serviceDatabaseUser.infaPCServiceDBPassword, steps('databaseConfiguration').serviceExistingDatabaseUser.infaPCServiceExistingDBPassword)]",
             "dbPort": "[steps('databaseConfiguration').databaseExistingConfig.databaseExistingPort]",
             "dbTablespace": "[steps('databaseConfiguration').databaseExistingConfig.databaseExistingTablespace]",
-            "storageName": "[steps('infraConfiguration').storageAccount.name]",
-            "storageType": "[steps('infraConfiguration').storageAccount.type]",
+
             "storageExistingOrNew": "[steps('infraConfiguration').storageAccount.newOrExisting]",
             "existingStorageRG": "[steps('infraConfiguration').storageAccount.resourceGroup]",
-            "vnetName": "[steps('infraConfiguration').infavnet.name]",
-            "vnetAddressPrefix": "[steps('infraConfiguration').infavnet.addressPrefix]",
+            "storageName": "[steps('infraConfiguration').storageAccount.name]",
+            "storageType": "[steps('infraConfiguration').storageAccount.type]",
+
             "vnetExistingOrNew": "[steps('infraConfiguration').infavnet.newOrExisting]",
             "existingVnetRG": "[steps('infraConfiguration').infavnet.resourceGroup]",
+            "vnetName": "[steps('infraConfiguration').infavnet.name]",
+            "vnetAddressPrefix": "[steps('infraConfiguration').infavnet.addressPrefix]",
             "subnetName": "[steps('infraConfiguration').infavnet.subnets.subnet1.name]",
             "subnetPrefix": "[steps('infraConfiguration').infavnet.subnets.subnet1.addressPrefix]"
         }
