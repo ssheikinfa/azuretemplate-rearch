@@ -109,11 +109,32 @@
             "type": "string",
             "allowedValues": [
                 "sqlserver2014",
-                "sqlserver2016"
+                "sqlserver2016",
+                "sqlserver",
+                "oracle",
+                "db2"
             ],
-            "defaultValue": "sqlserver2014",
+            "defaultValue": "sqlserver2016",
             "metadata": {
                 "description": "Database type. Only SQL Server 2014 and 2016 on VM is supported for now"
+            }
+        },
+        "dbName": {
+            "type": "string",
+            "metadata": {
+                "description": "Database service name"
+            }
+        },
+        "dbPort": {
+            "type": "string",
+            "metadata": {
+                "description": "Database port"
+            }
+        },
+        "dbTablespace": {
+            "type": "string",
+            "metadata": {
+                "description": "Database tablespace"
             }
         },
         "dbVMAdminUsername": {
@@ -156,18 +177,6 @@
             "defaultValue": "",
             "metadata": {
                 "description": "Database user password for Informatica PowerCenter Repository service"
-            }
-        },
-        "dbPort": {
-            "type": "string",
-            "metadata": {
-                "description": "Database port"
-            }
-        },
-        "dbTablespace": {
-            "type": "string",
-            "metadata": {
-                "description": "Database tablespace"
             }
         },
         "nodeVMCount": {
@@ -341,7 +350,16 @@
         },
         "storageID": "[variables('storageIDs')[parameters('storageExistingOrNew')]]",
 
-        "nsgName": "NetworkSecurityGroup"
+        "nsgName": "NetworkSecurityGroup",
+
+        "dbTypes": {
+            "sqlserver2014": "MSSQLServer",
+            "sqlserver2016": "MSSQLServer",
+            "sqlserver": "MSSQLServer",
+            "oracle": "Oracle",
+            "db2": "DB2"
+        },
+        "dbType": "[variables('dbTypes')[parameters('dbType')]]"
     },
     "resources": [
         {
@@ -545,6 +563,18 @@
                     "dbVMName": {
                         "value": "[parameters('dbVMName')]"
                     },
+                    "dbType": {
+                        "value": "[variables('dbType')]"
+                    },
+                    "dbName": {
+                        "value": "[parameters('dbName')]"
+                    },
+                    "dbPort": {
+                        "value": "[parameters('dbPort')]"
+                    },
+                    "dbTablespace": { 
+                        "value": "[parameters('dbTablespace')]"
+                    },
                     "dbUser": {
                         "value": "[parameters('dbUser')]"
                     },
@@ -554,11 +584,8 @@
                     "dbPCRSUser": {
                         "value": "[parameters('dbPCRSUser')]"
                     },
-                    "dbPCRSPassword": { 
+                    "dbPCRSPassword": {
                         "value": "[parameters('dbPCRSPassword')]"
-                    },
-                    "dbName": {
-                        "value": "[parameters('dbName')]"
                     },
                     "nodeVMSize": {
                         "value": "[parameters('nodeVMSize')]"

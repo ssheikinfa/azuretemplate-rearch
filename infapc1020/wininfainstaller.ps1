@@ -14,6 +14,7 @@ Param(
   [string]$dbNewOrExisting,
   [string]$dbType,
   [string]$dbName,
+  [string]$dbTablespace,
   [string]$dbUser,
   [string]$dbPassword,
   [string]$dbHost,
@@ -148,6 +149,9 @@ echo "Editing Informatica silent installation file"
 
 }) | sc $propertyFile
 
+if($dbType -eq "DB2") {
+	(gc $propertyFile | %{$_ -replace '^DB2_TABLESPACE=.*$',"DB2_TABLESPACE=$dbTablespace"}) | sc $propertyFile
+}
 
 # To speed-up installation
 Rename-Item $installerHome/source $installerHome/source_temp

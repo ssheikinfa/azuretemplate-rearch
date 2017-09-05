@@ -15,22 +15,23 @@ pcisName=${10}
 dbNewOrExisting=${11}
 dbType=${12}
 dbName=${13}
-dbUser=${14}
-dbPassword=${15}
-pcrsDBUser=${16}
-pcrsDBPassword=${17}
-dbHost=${18}
-dbPort=${19}
+dbTablespace=${14}
+dbUser=${15}
+dbPassword=${16}
+pcrsDBUser=${17}
+pcrsDBPassword=${18}
+dbHost=${19}
+dbPort=${20}
 
-sitekeyKeyword=${20}
+sitekeyKeyword=${21}
 
-joinDomain=${21}
-osUserName=${22}
+joinDomain=${22}
+osUserName=${23}
 
-storageName=${23}
-storageKey=${24}
+storageName=${24}
+storageKey=${25}
 
-domainLicenseURL=${25}
+domainLicenseURL=${26}
 
 echo Starting Informatica setup...
 echo Number of parameters $#
@@ -157,6 +158,11 @@ sed -i s/^DOMAIN_HOST_NAME=.*/DOMAIN_HOST_NAME=$domainHost/ $infainstallerloc/Si
 sed -i s/^DOMAIN_PSSWD=.*/DOMAIN_PSSWD=$(echo $domainPassword | sed -e 's/\\/\\\\/g; s/\//\\\//g; s/&/\\\&/g')/ $infainstallerloc/SilentInput.properties
 
 sed -i s/^DOMAIN_CNFRM_PSSWD=.*/DOMAIN_CNFRM_PSSWD=$(echo $domainPassword | sed -e 's/\\/\\\\/g; s/\//\\\//g; s/&/\\\&/g')/ $infainstallerloc/SilentInput.properties
+
+if [ "$dbType" = "DB2" ]
+then
+	sed -i s/^DB2_TABLESPACE=.*/DB2_TABLESPACE=$dbType/ $infainstallerloc/SilentInput.properties
+fi
 
 # To speed up installation
 mv $infainstallerloc/source $infainstallerloc/source_temp

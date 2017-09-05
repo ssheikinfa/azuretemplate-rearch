@@ -29,6 +29,18 @@
         "dbVMName": {
             "type": "string"
         },
+        "dbType": {
+            "type": "string"
+        },
+        "dbName": {
+            "type": "string"
+        },
+        "dbPort": {
+            "type": "int"
+        },
+        "dbTablespace": { 
+            "type": "string"
+        },
         "dbUser": {
             "type": "string"
         },
@@ -38,11 +50,8 @@
         "dbPCRSUser": {
             "type": "string"
         },
-        "dbPCRSPassword": { 
+        "dbPCRSPassword": {
             "type": "securestring"
-        },
-        "dbName": {
-            "type": "string"
         },
         "nodeVMSize": {
             "type": "string"
@@ -96,7 +105,7 @@
             "type": "string"
         },
         "informaticaTags": {
-            "type": "object" 
+            "type": "object"
         }
     },
     "variables": {
@@ -110,8 +119,6 @@
         "sshKeyPath": "[concat('/home/',parameters('nodeVMAdminUsername'),'/.ssh/authorized_keys')]",
 
         "infaNodePort": 6005,
-        "dbType": "MSSQLSERVER",
-        "dbPort": "1433",
 
         "imagePublisher": "informatica",
         "imageOffer": "platform_10_1_1_multi_node_domain_rhel-7-3_byol",
@@ -123,7 +130,6 @@
             "type": "Microsoft.Network/publicIPAddresses",
             "location": "[parameters('location')]",
             "apiVersion": "2016-10-01",
-            "dependsOn": [ ],
 
             "tags": {
                 "displayName": "publicip",
@@ -253,7 +259,7 @@
                             ]
                         },
                         "protectedSettings": {
-                            "commandToExecute": "[concat('sh ', variables('extScriptFile'), ' ', parameters('infaVersion'), ' ', concat(parameters('nodeVMNamePrefix'), '1'), ' ', parameters('infaDomainName'), ' \"', parameters('infaDomainUser'), '\" \"', parameters('infaDomainPassword'), '\" ', parameters('nodeVMCount'), ' ', parameters('infaNodeNamePrefix'), add(variables('index'), 1), ' ', variables('infaNodePort'), ' ', parameters('infaPCRSName'), ' ', parameters('infaPCISName'), ' ', parameters('dbNewOrExisting'), ' ', variables('dbType'), ' ', parameters('dbName'), ' \"', parameters('dbUser'), '\" \"', parameters('dbPassword'), '\" ', parameters('dbPCRSUser'), ' \"', parameters('dbPCRSPassword'), '\"  ',parameters('dbVMName'), ' ', variables('dbPort'), ' \"', parameters('infaKeyword'), '\" ', variables('index'), ' \"', parameters('nodeVMAdminUsername'), '\" \"', parameters('storageName'), '\" ', listKeys(parameters('storageID'), '2016-01-01').keys[0].value, ' \"', parameters('infaDomainLicense'), '\"')]"
+                            "commandToExecute": "[concat('sh ', variables('extScriptFile'), ' ', parameters('infaVersion'), ' ', concat(parameters('nodeVMNamePrefix'), '1'), ' ', parameters('infaDomainName'), ' \"', parameters('infaDomainUser'), '\" \"', parameters('infaDomainPassword'), '\" ', parameters('nodeVMCount'), ' ', parameters('infaNodeNamePrefix'), add(variables('index'), 1), ' ', variables('infaNodePort'), ' ', parameters('infaPCRSName'), ' ', parameters('infaPCISName'), ' ', parameters('dbNewOrExisting'), ' ', parameters('dbType'), ' ', parameters('dbName'), ' ', parameters('dbTablespace'), ' \"', parameters('dbUser'), '\" \"', parameters('dbPassword'), '\" ', parameters('dbPCRSUser'), ' \"', parameters('dbPCRSPassword'), '\"  ',parameters('dbVMName'), ' ', parameters('dbPort'), ' \"', parameters('infaKeyword'), '\" ', variables('index'), ' \"', parameters('nodeVMAdminUsername'), '\" \"', parameters('storageName'), '\" ', listKeys(parameters('storageID'), '2016-01-01').keys[0].value, ' \"', parameters('infaDomainLicense'), '\"')]"
                         }
                     }
                 }
