@@ -473,6 +473,9 @@
                     "storageName": {
                         "value": "[parameters('storageName')]"
                     },
+                    "storageID": {
+                        "value": "[variables('storageID')]"
+                    },
                     "dbType": {
                         "value": "[parameters('dbType')]"
                     },

@@ -223,7 +223,7 @@
                         "caching": "ReadWrite",
                         "createOption": "FromImage",
                         "vhd": {
-                            "uri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', parameters('storageName'))).primaryEndpoints.blob, 'vhds/', parameters('nodeVMNamePrefix'), uniqueString(resourceGroup().id, deployment().name), add(variables('index'), 1), '.osdisk.vhd')]"
+                            "uri": "[concat(reference(parameters('storageID')).primaryEndpoints.blob, '/vhds/', parameters('nodeVMNamePrefix'), uniqueString(resourceGroup().id, deployment().name), add(variables('index'), 1), '.osdisk.vhd')]"
                         }
                     }
                 },
