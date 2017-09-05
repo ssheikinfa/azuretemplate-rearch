@@ -127,6 +127,7 @@
         },
         "dbPort": {
             "type": "string",
+            "defaultValue": "1433",
             "metadata": {
                 "description": "Database port"
             }
