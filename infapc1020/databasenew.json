@@ -11,6 +11,9 @@
         "storageID": {
             "type": "string"
         },
+        "storageRef": {
+            "type": "string"
+        },
         "dbType": {
             "type": "string"
         },

@@ -27,6 +27,10 @@
         "storageId": {
             "value": "[resourceId(parameters('existingStorageRG'), 'Microsoft.Storage/storageAccounts', parameters('storageName'))]",
             "type": "string"
+        },
+        "storageRef": { 
+            "value": "[reference(resourceId(parameters('existingStorageRG'), 'Microsoft.Storage/storageAccounts', parameters('storageName'))).primaryEndpoints.blob]",
+            "type": "string"
         }
     }
 }

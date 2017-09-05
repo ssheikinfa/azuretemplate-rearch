@@ -476,6 +476,9 @@
                     "storageID": {
                         "value": "[variables('storageID')]"
                     },
+                    "storageRef": { 
+                        "value": "[reference('storageSetup').outputs.storageRef.value]"
+                    },
                     "dbType": {
                         "value": "[parameters('dbType')]"
                     },
@@ -550,6 +553,9 @@
                     "storageID": {
                         "value": "[variables('storageID')]"
                     },
+                    "storageRef": { 
+                        "value": "[reference('storageSetup').outputs.storageRef.value]"
+                    },
                     "vnetName": {
                         "value": "[parameters('vnetName')]"
                     },
@@ -577,7 +583,7 @@
                     "dbPort": {
                         "value": "[variables('dbPort')]"
                     },
-                    "dbTablespace": { 
+                    "dbTablespace": {
                         "value": "[parameters('dbTablespace')]"
                     },
                     "dbUser": {
