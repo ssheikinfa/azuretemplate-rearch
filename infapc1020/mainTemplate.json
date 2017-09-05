@@ -359,7 +359,8 @@
             "oracle": "Oracle",
             "db2": "DB2"
         },
-        "dbType": "[variables('dbTypes')[parameters('dbType')]]"
+        "dbType": "[variables('dbTypes')[parameters('dbType')]]",
+        "dbPort": "[int(parameters('dbPort'))]"
     },
     "resources": [
         {
@@ -570,7 +571,7 @@
                         "value": "[parameters('dbName')]"
                     },
                     "dbPort": {
-                        "value": "[parameters('dbPort')]"
+                        "value": "[variables('dbPort')]"
                     },
                     "dbTablespace": { 
                         "value": "[parameters('dbTablespace')]"
