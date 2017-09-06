@@ -65,7 +65,7 @@ $propertyFile = $installerHome + "\SilentInput.properties"
 
 $infaLicenseFile = ""
 $CLOUD_SUPPORT_ENABLE = "1"
-if($infaLicense -ne "nolicense" -and $joinDomain -eq 0) {
+if($infaLicense -ne "#_no_license_#" -and $joinDomain -eq 0) {
 	$infaLicenseFile = $env:SystemDrive + "\Informatica\license.key"
 	echo "Getting Informatica license"
 	wget $infaLicense -OutFile $infaLicenseFile
@@ -149,7 +149,7 @@ echo "Editing Informatica silent installation file"
 
 }) | sc $propertyFile
 
-if($dbType -eq "DB2") {
+if($dbType -eq "DB2" -and $dbTablespace -ne "#_no_tablespace_#") {
 	(gc $propertyFile | %{$_ -replace '^DB2_TABLESPACE=.*$',"DB2_TABLESPACE=$dbTablespace"}) | sc $propertyFile
 }
 

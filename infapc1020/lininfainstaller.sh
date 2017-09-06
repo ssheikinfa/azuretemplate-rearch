@@ -77,7 +77,7 @@ export PATH
 chmod -R 777 $JRE_HOME
 
 cloudsupportenable=1
-if [ "$domainLicenseURL" != "nolicense" -a $joinDomain -eq 0 ]
+if [ "$domainLicenseURL" != "#_no_license_#" -a $joinDomain -eq 0 ]
 then
 	echo Getting Informatica license
 	cd $utilityhome
@@ -159,7 +159,7 @@ sed -i s/^DOMAIN_PSSWD=.*/DOMAIN_PSSWD=$(echo $domainPassword | sed -e 's/\\/\\\
 
 sed -i s/^DOMAIN_CNFRM_PSSWD=.*/DOMAIN_CNFRM_PSSWD=$(echo $domainPassword | sed -e 's/\\/\\\\/g; s/\//\\\//g; s/&/\\\&/g')/ $infainstallerloc/SilentInput.properties
 
-if [ "$dbType" = "DB2" ]
+if [ "$dbType" = "DB2" -a "$dbTablespace" != "#_no_tablespace_#" ]
 then
 	sed -i s/^DB2_TABLESPACE=.*/DB2_TABLESPACE=$dbType/ $infainstallerloc/SilentInput.properties
 fi

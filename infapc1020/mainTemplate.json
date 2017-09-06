@@ -134,6 +134,7 @@
         },
         "dbTablespace": {
             "type": "string",
+            "defaultValue": "#_no_tablespace_#",
             "metadata": {
                 "description": "Database tablespace"
             }
@@ -299,7 +300,7 @@
         },
         "infaDomainLicense": {
             "type": "securestring",
-            "defaultValue": "nolicense",
+            "defaultValue": "#_no_license_#",
             "metadata": {
                 "description": "Informatica domain license key file url"
             }
