@@ -46,7 +46,6 @@ netsh  advfirewall firewall add rule name="Informatica_PowerCenter" dir=in actio
 $shareName = "infaaeshare"
 
 # Informatica version needs to be handled here
-
 $infaHome = $env:SystemDrive + "\Informatica\10.1.1"
 $installerHome = $env:SystemDrive + "\Informatica\Archive\informatica_1011HF1_server_winem-64t"
 $utilityHome = $env:SystemDrive + "\Informatica\Archive\utilities"
@@ -63,6 +62,8 @@ $userInstallDir = $infaHome
 $defaultKeyLocation = $infaHome + "\isp\config\keys"
 $propertyFile = $installerHome + "\SilentInput.properties"
 
+
+# Check if license is provided and if it master node installation
 $infaLicenseFile = ""
 $CLOUD_SUPPORT_ENABLE = "1"
 if($infaLicense -ne "#_no_license_#" -and $joinDomain -eq 0) {
@@ -166,19 +167,28 @@ Start-Process $installCmd -Verb runAs -workingdirectory $installerHome -wait | O
 rmdir $installerHome/source
 Rename-Item $installerHome/source_temp $installerHome/source
 
-if($infaLicenseFile -ne "") {
-	rm $infaLicenseFile
-}
+# Change to installation directory
+cd $infaHome
 
 # Validate of installation
-#################################################
+($out = isp\bin\infacmd ping -dn $domainName -nn $nodeName) | Out-Null
+if($LASTEXITCODE -ne 0) {
+	echo "Informatica domain setup failed"
+	exit 255
+}
 
 echo "Informatica domain setup Complete"
 
+# Get license name
+$licenseNameOption = ""
+if($infaLicense -ne "#_no_license_#") {
+	($out = isp\bin\infacmd listLicenses -dn $domainName -un $domainUser -pd $domainPassword)
+	($licenseName = $out -split ' ' | select -First 1)
+	$licenseNameOption = "-ln" + $licenseName
+	echo $licenseName
+}
+
 # Creating PC services
-
-cd $infaHome
-
 $code = 0
 
 if($joinDomain -eq 0 ) {
@@ -187,25 +197,30 @@ if($joinDomain -eq 0 ) {
 
 		echo "Creating PowerCenter services"
 
-	    if(($dbType -like "mssqlserver" -or $dbType -like "sqlserver") -and $dbNewOrExisting -eq "new") {
-            $pcrsDBType = "MSSQLSERVER"
+	    if($dbType -like "mssqlserver" -or $dbType -like "sqlserver") {
+            $pcrsDBType = "MSSQLServer"
 			$pcrsConnectString = $dbHost + "@" + $dbName
+			$pcrsTablespace = ""
+		} elif($dbType -like "oracle") {
+			$pcrsDBType = "Oracle"
+			$pcrsConnectString = $dbName
+			$pcrsTablespace = "" 
+		} elif($dbType -like "db2") {
+			$pcrsDBType = "DB2"
+			$pcrsConnectString = $dbName
+			$pcrsTablespaceOption = "TablespaceName=" + $dbTablespace
 		} else {
-            if($dbNewOrExisting -eq "existing") {
-			    #################################################
-			    echo "Handle existing DB here"
-            } else {
-                echo "Unsupported DB type for CRS"
-            }
+			echo "Unsupported database"
+			exit 255
 		}
 
-		($out = isp\bin\infacmd createRepositoryService -dn $domainName -nn $nodeName -sn $pcrsName -so DBUser=$pcrsDBUser DatabaseType=$pcrsDBType DBPassword="$pcrsDBPassword" ConnectString="$pcrsConnectString" CodePage="MS Windows Latin 1 (ANSI), superset of Latin1" OperatingMode=NORMAL -un $domainUser -pd $domainPassword -sd ) | Out-Null
+		($out = isp\bin\infacmd createRepositoryService -dn $domainName -nn $nodeName -sn $pcrsName -so DBUser=$pcrsDBUser DatabaseType=$pcrsDBType DBPassword="$pcrsDBPassword" ConnectString="$pcrsConnectString" CodePage="MS Windows Latin 1 (ANSI), superset of Latin1" OperatingMode=NORMAL $pcrsTablespaceOption -un $domainUser -pd $domainPassword -sd ) | Out-Null
 
 		$code=$LASTEXITCODE
 		ac $logHome $out
 
 		if ($nodeCount -eq 1 ) {
-			($out = isp\bin\infacmd createintegrationservice -dn $domainName -nn $nodeName -un $domainUser -pd $domainPassword -sn $pcisName -rs  $pcrsName -ru $domainUser -rp $domainPassword  -po codepage_id=2252 -sd -ev INFA_CODEPAGENAME=MS1252) | Out-Null
+			($out = isp\bin\infacmd createintegrationservice -dn $domainName -nn $nodeName -un $domainUser -pd $domainPassword -sn $pcisName -rs  $pcrsName -ru $domainUser -rp $domainPassword $licenseNameOption -po codepage_id=2252 -sd -ev INFA_CODEPAGENAME=MS1252) | Out-Null
 			$code=$code -bor $LASTEXITCODE
 			ac $logHome $out 
 		} else {
@@ -216,7 +231,7 @@ if($joinDomain -eq 0 ) {
 
 			ac $logHome $out 
 
-			($out = isp\bin\infacmd createintegrationservice -dn $domainName -gn grid -un $domainUser -pd $domainPassword -sn $pcisName -rs  $pcrsName -ru $domainUser -rp $domainPassword  -po codepage_id=2252 -sd -ev INFA_CODEPAGENAME=MS1252) | Out-Null
+			($out = isp\bin\infacmd createintegrationservice -dn $domainName -gn grid -un $domainUser -pd $domainPassword -sn $pcisName -rs  $pcrsName -ru $domainUser -rp $domainPassword $licenseNameOption -po codepage_id=2252 -sd -ev INFA_CODEPAGENAME=MS1252) | Out-Null
 
 			$code = $code -bor $LASTEXITCODE
 
@@ -237,6 +252,10 @@ if($joinDomain -eq 0 ) {
 	   ($out = isp\bin\infacmd updateServiceProcess -dn $domainName -un $domainUser -pd $domainPassword -sn $pcisName -nn $nodeName -po CodePage_Id=2252 -ev INFA_CODEPAGENAME=MS1252) | Out-Null
      
     ac $logHome $out
+}
+
+if($infaLicenseFile -ne "") {
+	rm $infaLicenseFile
 }
 
 exit $code
