@@ -167,6 +167,11 @@ Start-Process $installCmd -Verb runAs -workingdirectory $installerHome -wait | O
 rmdir $installerHome/source
 Rename-Item $installerHome/source_temp $installerHome/source
 
+# Remove license file from VM
+if($infaLicenseFile -ne "") {
+	rm $infaLicenseFile
+}
+
 # Change to installation directory
 cd $infaHome
 
@@ -179,12 +184,12 @@ if($LASTEXITCODE -ne 0) {
 
 echo "Informatica domain setup Complete"
 
-# Get license name
+# Get license name from domain
 $licenseNameOption = ""
 if($infaLicense -ne "#_no_license_#") {
 	($out = isp\bin\infacmd listLicenses -dn $domainName -un $domainUser -pd $domainPassword)
 	($licenseName = $out -split ' ' | select -First 1)
-	$licenseNameOption = "-ln" + $licenseName
+	$licenseNameOption = "-ln " + $licenseName
 	echo $licenseName
 }
 
@@ -193,8 +198,6 @@ $code = 0
 
 if($joinDomain -eq 0 ) {
     if(-not [string]::IsNullOrEmpty($pcrsDBUser) -and -not [string]::IsNullOrEmpty($pcrsDBPassword)) {
-		#ENABLE CRS AND IS after the issue of db resolution through native clients is resolved
-
 		echo "Creating PowerCenter services"
 
 	    if($dbType -like "mssqlserver" -or $dbType -like "sqlserver") {
@@ -214,7 +217,7 @@ if($joinDomain -eq 0 ) {
 			exit 255
 		}
 
-		($out = isp\bin\infacmd createRepositoryService -dn $domainName -nn $nodeName -sn $pcrsName -so DBUser=$pcrsDBUser DatabaseType=$pcrsDBType DBPassword="$pcrsDBPassword" ConnectString="$pcrsConnectString" CodePage="MS Windows Latin 1 (ANSI), superset of Latin1" OperatingMode=NORMAL $pcrsTablespaceOption -un $domainUser -pd $domainPassword -sd ) | Out-Null
+		($out = isp\bin\infacmd createRepositoryService -dn $domainName -nn $nodeName -sn $pcrsName -so DBUser=$pcrsDBUser DatabaseType=$pcrsDBType DBPassword="$pcrsDBPassword" ConnectString="$pcrsConnectString" CodePage="MS Windows Latin 1 (ANSI), superset of Latin1" OperatingMode=NORMAL $pcrsTablespaceOption -un $domainUser -pd $domainPassword -sd $licenseNameOption ) | Out-Null
 
 		$code=$LASTEXITCODE
 		ac $logHome $out
@@ -226,19 +229,14 @@ if($joinDomain -eq 0 ) {
 		} else {
 
 			($out = isp\bin\infacmd creategrid -dn $domainName -un $domainUser -pd $domainPassword -gn grid -nl $nodeName) | Out-Null        
-
 			$code = $LASTEXITCODE
-
 			ac $logHome $out 
 
 			($out = isp\bin\infacmd createintegrationservice -dn $domainName -gn grid -un $domainUser -pd $domainPassword -sn $pcisName -rs  $pcrsName -ru $domainUser -rp $domainPassword $licenseNameOption -po codepage_id=2252 -sd -ev INFA_CODEPAGENAME=MS1252) | Out-Null
-
 			$code = $code -bor $LASTEXITCODE
-
 			ac $logHome $out 
 
 			($out = isp\bin\infacmd updateServiceProcess -dn $domainName -un $domainUser -pd $domainPassword -sn $pcisName -nn $nodeName -po CodePage_Id=2252) | Out-Null
-
 			$code = $code -bor $LASTEXITCODE
 			ac $logHome $out 
 		}
@@ -246,16 +244,11 @@ if($joinDomain -eq 0 ) {
 } else {
 	ac $logHome "Updating the grid with node"
     ($out = isp\bin\infacmd updategrid -dn $domainName -un $domainUser -pd $domainPassword -gn grid -nl $nodeName -ul) |Out-Null
-    $code = $LASTEXITCODE
     ac $logHome $out
+
   	ac $logHome "Updating service process"
 	   ($out = isp\bin\infacmd updateServiceProcess -dn $domainName -un $domainUser -pd $domainPassword -sn $pcisName -nn $nodeName -po CodePage_Id=2252 -ev INFA_CODEPAGENAME=MS1252) | Out-Null
-     
-    ac $logHome $out
-}
-
-if($infaLicenseFile -ne "") {
-	rm $infaLicenseFile
+	ac $logHome $out
 }
 
 exit $code
