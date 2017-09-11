@@ -187,15 +187,12 @@ echo "Informatica domain setup Complete"
 # Get license name from domain
 $licenseNameOption = ""
 if($infaLicense -ne "#_no_license_#") {
-	($out = isp\bin\infacmd listLicenses -dn $domainName -un $domainUser -pd $domainPassword)
+	($out = isp\bin\infacmd listLicenses -dn $domainName -un $domainUser -pd $domainPassword) | Out-Null
 	($licenseName = $out -split ' ' | select -First 1)
 	$licenseNameOption = "-ln " + $licenseName
-	echo $licenseName
 }
 
 # Creating PC services
-$code = 0
-
 if($joinDomain -eq 0 ) {
     if(-not [string]::IsNullOrEmpty($pcrsDBUser) -and -not [string]::IsNullOrEmpty($pcrsDBPassword)) {
 		echo "Creating PowerCenter services"
@@ -222,41 +219,46 @@ if($joinDomain -eq 0 ) {
             }
         }
 
-        #debug
-        echo $pcrsDBType $pcrsConnectString $pcrsTablespaceOption  
-
-		($out = isp\bin\infacmd createRepositoryService -dn $domainName -nn $nodeName -sn $pcrsName -so DBUser=$pcrsDBUser DatabaseType=$pcrsDBType DBPassword="$pcrsDBPassword" ConnectString="$pcrsConnectString" CodePage="MS Windows Latin 1 (ANSI), superset of Latin1" OperatingMode=NORMAL $pcrsTablespaceOption -un $domainUser -pd $domainPassword -sd $licenseNameOption ) | Out-Null
-
-		$code=$LASTEXITCODE
-		ac $logHome $out
+        $repoCmd = "isp\bin\infacmd createRepositoryService -dn $domainName -nn $nodeName -sn $pcrsName -so DBUser=$pcrsDBUser DatabaseType=$pcrsDBType DBPassword=""$pcrsDBPassword"" ConnectString=""$pcrsConnectString"" CodePage=""MS Windows Latin 1 (ANSI), superset of Latin1"" OperatingMode=NORMAL $pcrsTablespaceOption -un $domainUser -pd $domainPassword -sd true $licenseNameOption"
+        executeCommand $repoCmd "Create Repository service" $true
 
 		if ($nodeCount -eq 1 ) {
-			($out = isp\bin\infacmd createintegrationservice -dn $domainName -nn $nodeName -un $domainUser -pd $domainPassword -sn $pcisName -rs  $pcrsName -ru $domainUser -rp $domainPassword $licenseNameOption -po codepage_id=2252 -sd -ev INFA_CODEPAGENAME=MS1252) | Out-Null
-			$code=$code -bor $LASTEXITCODE
-			ac $logHome $out 
+            
+			$intCmd = "isp\bin\infacmd createintegrationservice -dn $domainName -nn $nodeName -un $domainUser -pd $domainPassword -sn $pcisName -rs  $pcrsName -ru $domainUser -rp $domainPassword $licenseNameOption -po codepage_id=2252 -sd -ev INFA_CODEPAGENAME=MS1252"
+			executeCommand $intCmd "Create Integration service" $true 
 		} else {
 
-			($out = isp\bin\infacmd creategrid -dn $domainName -un $domainUser -pd $domainPassword -gn grid -nl $nodeName) | Out-Null        
-			$code = $LASTEXITCODE
-			ac $logHome $out 
+			$gridCmd = "isp\bin\infacmd creategrid -dn $domainName -un $domainUser -pd $domainPassword -gn grid -nl $nodeName"
+			executeCommand $gridCmd "Create Grid" $true 
 
-			($out = isp\bin\infacmd createintegrationservice -dn $domainName -gn grid -un $domainUser -pd $domainPassword -sn $pcisName -rs  $pcrsName -ru $domainUser -rp $domainPassword $licenseNameOption -po codepage_id=2252 -sd -ev INFA_CODEPAGENAME=MS1252) | Out-Null
-			$code = $code -bor $LASTEXITCODE
-			ac $logHome $out 
+			$intCmd = "isp\bin\infacmd createintegrationservice -dn $domainName -gn grid -un $domainUser -pd $domainPassword -sn $pcisName -rs  $pcrsName -ru $domainUser -rp $domainPassword $licenseNameOption -po codepage_id=2252 -sd -ev INFA_CODEPAGENAME=MS1252"
+			executeCommand $intCmd "Create Integration service on Grid" $true 
 
-			($out = isp\bin\infacmd updateServiceProcess -dn $domainName -un $domainUser -pd $domainPassword -sn $pcisName -nn $nodeName -po CodePage_Id=2252) | Out-Null
-			$code = $code -bor $LASTEXITCODE
-			ac $logHome $out 
+			$updSrvCmd = "isp\bin\infacmd updateServiceProcess -dn $domainName -un $domainUser -pd $domainPassword -sn $pcisName -nn $nodeName -po CodePage_Id=2252"
+			executeCommand $updSrvCmd "Update Integration service process" $true  
 		}
 	}
-} else {
-	ac $logHome "Updating the grid with node"
-    ($out = isp\bin\infacmd updategrid -dn $domainName -un $domainUser -pd $domainPassword -gn grid -nl $nodeName -ul) |Out-Null
-    ac $logHome $out
+} else { 
+    updGrdCmd = "isp\bin\infacmd updategrid -dn $domainName -un $domainUser -pd $domainPassword -gn grid -nl $nodeName -ul"
+    executeCommand $updSrvCmd "Updating the grid with node" $true 3
 
-  	ac $logHome "Updating service process"
-	   ($out = isp\bin\infacmd updateServiceProcess -dn $domainName -un $domainUser -pd $domainPassword -sn $pcisName -nn $nodeName -po CodePage_Id=2252 -ev INFA_CODEPAGENAME=MS1252) | Out-Null
-	ac $logHome $out
+	$updSrvCmd = "isp\bin\infacmd updateServiceProcess -dn $domainName -un $domainUser -pd $domainPassword -sn $pcisName -nn $nodeName -po CodePage_Id=2252 -ev INFA_CODEPAGENAME=MS1252"
+	executeCommand $updSrvCmd "Update Integration service process" $true 3
 }
 
-exit $code
+
+function executeCommand {
+    Param([String]$command, [String]$logMesage = "No message", [bool]$exitOnFailure = $false, [int]$retry = 0)
+    
+    $counter = 0
+    do {    
+        ($out = cmd /c $repoCmd)
+        $code = $LASTEXITCODE
+        ac $logHome $logMesage + ": " + $out + ", Attempt: " + ++$counter
+        --$retry
+    } while($code -ne 0 -And $retry -ge 0)
+
+    if($code -ne 0 -And $exitOnFailure -eq $true) {
+        exit $code
+    }
+}
