@@ -200,22 +200,30 @@ if($joinDomain -eq 0 ) {
     if(-not [string]::IsNullOrEmpty($pcrsDBUser) -and -not [string]::IsNullOrEmpty($pcrsDBPassword)) {
 		echo "Creating PowerCenter services"
 
-	    if($dbType -like "mssqlserver" -or $dbType -like "sqlserver") {
-            $pcrsDBType = "MSSQLServer"
-			$pcrsConnectString = $dbHost + "@" + $dbName
-			$pcrsTablespace = ""
-		} elif($dbType -like "oracle") {
-			$pcrsDBType = "Oracle"
-			$pcrsConnectString = $dbName
-			$pcrsTablespace = "" 
-		} elif($dbType -like "db2") {
-			$pcrsDBType = "DB2"
-			$pcrsConnectString = $dbName
-			$pcrsTablespaceOption = "TablespaceName=" + $dbTablespace
-		} else {
-			echo "Unsupported database"
-			exit 255
-		}
+	    switch -Wildcard ($dbType) {
+            "MSSQLServer" {
+                $pcrsDBType = "MSSQLServer"
+			    $pcrsConnectString = $dbHost + "@" + $dbName
+			    $pcrsTablespace = ""    
+            }
+            "Oracle" {
+                $pcrsDBType = "Oracle"
+			    $pcrsConnectString = $dbName
+			    $pcrsTablespace = ""    
+            }
+            "DB2" {
+                $pcrsDBType = "DB2"
+			    $pcrsConnectString = $dbName
+			    $pcrsTablespaceOption = "TablespaceName=" + $dbTablespace    
+            }
+            default {
+                echo "Unsupported database"
+			    exit 255
+            }
+        }
+
+        #debug
+        echo $pcrsDBType $pcrsConnectString $pcrsTablespaceOption  
 
 		($out = isp\bin\infacmd createRepositoryService -dn $domainName -nn $nodeName -sn $pcrsName -so DBUser=$pcrsDBUser DatabaseType=$pcrsDBType DBPassword="$pcrsDBPassword" ConnectString="$pcrsConnectString" CodePage="MS Windows Latin 1 (ANSI), superset of Latin1" OperatingMode=NORMAL $pcrsTablespaceOption -un $domainUser -pd $domainPassword -sd $licenseNameOption ) | Out-Null
 
