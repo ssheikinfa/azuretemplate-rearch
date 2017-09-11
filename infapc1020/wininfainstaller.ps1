@@ -37,6 +37,25 @@ Param(
   [string]$infaLicense
 )
 
+function executeCommand {
+    Param([String]$command, [String]$logMesage = "No message", [bool]$exitOnFailure = $false, [int]$retry = 0)
+    
+    $counter = 0
+    $error.Clear()
+    do {   
+        Invoke-Expression $command -OutVariable outputMessage -ErrorVariable errorMessage
+        $code = $error.Count
+
+        $message = $(get-date -f MM-dd-yyyy_HH_mm_ss) + " " + $logMesage + ": " + $outputMessage + $errorMessage + ", Attempt: " + ++$counter
+        ac $logHome $message
+        --$retry
+    } while($code -ne 0 -And $retry -gt 0)
+
+    if($code -ne 0 -And $exitOnFailure -eq $true) {
+        exit $code
+    }
+}
+
 #echo $domainHost $domainName $domainUser $domainPassword $nodeName $nodePort $dbType $dbName $dbUser $dbPassword $dbHost $dbPort $sitekeyKeyword $joinDomain $masterNodeHost $osUserName $infaEdition $storageName $storageKey $infaLicense
 
 #Adding Windows firewall inbound rule
@@ -244,21 +263,4 @@ if($joinDomain -eq 0 ) {
 
 	$updSrvCmd = "$installerHome\isp\bin\infacmd updateServiceProcess -dn $domainName -un $domainUser -pd $domainPassword -sn $pcisName -nn $nodeName -po CodePage_Id=2252 -ev INFA_CODEPAGENAME=MS1252"
 	executeCommand $updSrvCmd "Update Integration service process" $true 3
-}
-
-
-function executeCommand {
-    Param([String]$command, [String]$logMesage = "No message", [bool]$exitOnFailure = $false, [int]$retry = 0)
-    
-    $counter = 0
-    do {    
-        ($out = cmd /c $repoCmd)
-        $code = $LASTEXITCODE
-        ac $logHome $logMesage + ": " + $out + ", Attempt: " + ++$counter
-        --$retry
-    } while($code -ne 0 -And $retry -ge 0)
-
-    if($code -ne 0 -And $exitOnFailure -eq $true) {
-        exit $code
-    }
 }
