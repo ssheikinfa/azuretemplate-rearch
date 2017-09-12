@@ -38,7 +38,7 @@ echo Number of parameters $#
 echo $domainVersion $domainHost $domainName $domainUser $domainPassword $nodeCount $nodeName $nodePort $pcrsName $pcisName $dbNewOrExisting $dbType $dbName $dbUser $dbPassword pcrsDBUser, pcrsDBPassword $dbHost $dbPort $sitekeyKeyword $joinDomain $osUserName $storageName $storageKey $domainLicenseURL
 
 #Usage
-if [ $# -ne 25 ]
+if [ $# -ne 26 ]
 then
 	echo lininfainstaller.sh domainHost domainName domainUser domainPassword nodeName nodePort dbType dbName dbUser dbPassword dbHost dbPort sitekeyKeyword joinDomain  osUserName storageName storageKey domainLicenseURL
 	exit -1
@@ -191,29 +191,77 @@ echo Informatica setup Complete.
 
 cd $infainstallionlocown/10.1.1
 
+# Validate of installation
+isp/bin/infacmd.sh ping -dn $domainName -nn $nodeName
+if [ $? -ne 0 ] 
+then
+	echo "Informatica domain setup failed"
+	exit 255
+fi
+
+
+
+# Get license name from domain
+licenseNameOption=""
+if [ "$infaLicense" -ne "#_no_license_#" ]
+then
+	licenseName=`isp/bin/infacmd.sh listLicenses -dn $domainName -un $domainUser -pd $domainPassword | head -1 | awk '{print $1}'`
+	licenseNameOption="-ln $licenseName"
+	echo $licenseName
+fi
+
+
 if [ $joinDomain -eq 0 ]
 then
+	
+	if [ "$dbType" = "MSSQLServer" ]
+	then
+		$pcrsDBType = "MSSQLServer"
+		$pcrsConnectString = $dbHost + "@" + $dbName
+		$pcrsTablespace = ""
+	elif [ "$dbType" = "Oracle" ]
+	then
+		$pcrsDBType = "Oracle"
+		$pcrsConnectString = $dbName
+		$pcrsTablespace = ""
+	elif [ "$dbType" = "DB2" ] 
+	then
+		$pcrsDBType = "DB2"
+		$pcrsConnectString = $dbName
+		$pcrsTablespace = "TablespaceName=$dbTablespace" 
+	else
+		echo Unsupported database
+		exit 255
+	fi
+
+	
 	echo "creating PC services" >> $logfile
 
-    isp/bin/infacmd.sh  createrepositoryservice -dn $domainName -nn $nodeName -sn $pcrsName -so DBUser=$pcrsDBUser DatabaseType=$dbType DBPassword=$pcrsDBPassword ConnectString=$dbName CodePage="ISO 8859-1 Western European"  OperatingMode=NORMAL -un $domainUser -pd $domainPassword -sd &>> $logfile
+	date >> $logfile
+    isp/bin/infacmd.sh  createrepositoryservice -dn $domainName -nn $nodeName -sn $pcrsName -so DBUser=$pcrsDBUser DatabaseType=$dbType DBPassword=$pcrsDBPassword ConnectString=$dbName CodePage="ISO 8859-1 Western European"  OperatingMode=NORMAL $pcrsTablespace -un $domainUser -pd $domainPassword $licenseNameOption -sd &>> $logfile
     EXITCODE=$?
 
     if [ $nodeCount -eq 1 ]
 	then
-		isp/bin/infacmd.sh  createintegrationservice -dn $domainName -nn $nodeName -un $domainUser -pd $domainPassword -sn $pcisName  -rs $pcrsName  -ru $domainUser -rp $domainPassword -po codepage_id=4 -sd &>> $logfile
+		date >> $logfile
+		isp/bin/infacmd.sh  createintegrationservice -dn $domainName -nn $nodeName -un $domainUser -pd $domainPassword -sn $pcisName  -rs $pcrsName  -ru $domainUser -rp $domainPassword -po codepage_id=4 $licenseNameOption -sd &>> $logfile
 	   	EXITCODE=$(($? | EXITCODE))
 	else 
+		date >> $logfile
 		isp/bin/infacmd.sh  creategrid -dn $domainName -un $domainUser -pd $domainPassword -gn grid -nl $nodeName &>> $logfile
 	  	EXITCODE=$(($? | EXITCODE))
 
+		date >> $logfile
 		isp/bin/infacmd.sh  createintegrationservice -dn $domainName -gn grid -un $domainUser -pd $domainPassword -sn $pcisName -rs  $pcrsName -ru $domainUser -rp $domainPassword  -po codepage_id=4 -sd &>> $logfile
 	  	EXITCODE=$(($? | EXITCODE))
 
 	fi
 else
+	date >> $logfile
     isp/bin/infacmd.sh  updategrid -dn $domainName -un $domainUser -pd $domainPassword -gn grid -nl $nodeName -ul &>> $logfile
 	EXITCODE=$?
 
+	date >> $logfile
     isp/bin/infacmd.sh  updateServiceProcess -dn $domainName -un $domainUser -pd $domainPassword -sn $pcisName -nn $nodeName -po CodePage_Id=4 &>> $logfile
     EXITCODE=$(($? | EXITCODE))
      

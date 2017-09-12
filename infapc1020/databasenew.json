@@ -64,7 +64,7 @@
         }
     },
     "variables": {
-        "publicDNSName": "[toLower(concat(parameters('dbVMName'), uniqueString(resourceGroup().id, deployment().name)))]",
+        "publicDNSName": "[toLower(concat(parameters('dbVMName'), uniqueString(resourceGroup().id)))]",
         "dbVMNicName": "[concat(parameters('dbVMName'), 'Nic')]",
         "dbOsType": "windows",
 
@@ -173,7 +173,7 @@
                         "caching": "ReadWrite",
                         "createOption": "FromImage",
                         "vhd": {
-                            "uri": "[concat(parameters('storageRef'), 'vhds/', parameters('dbVMName'), uniqueString(resourceGroup().id, deployment().name), '.osdisk.vhd')]"
+                            "uri": "[concat(parameters('storageRef'), 'vhds/', parameters('dbVMName'), uniqueString(resourceGroup().id), '.osdisk.vhd')]"
                         }
                     }
                 },
