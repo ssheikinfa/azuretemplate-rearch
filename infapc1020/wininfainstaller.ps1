@@ -241,7 +241,10 @@ if($joinDomain -eq 0 ) {
         $repoCmd = "$infaHome\isp\bin\infacmd createRepositoryService -dn $domainName -nn $nodeName -sn $pcrsName -so DBUser=$pcrsDBUser DatabaseType=$pcrsDBType DBPassword=""$pcrsDBPassword"" ConnectString=""$pcrsConnectString"" CodePage=""MS Windows Latin 1 (ANSI), superset of Latin1"" OperatingMode=NORMAL $pcrsTablespaceOption -un $domainUser -pd $domainPassword -sd true $licenseNameOption"
         executeCommand $repoCmd "Create Repository service" $true
 
-		if ($nodeCount -eq 1 ) {
+        #Debug 
+        echo "Node count $nodeCount"
+
+		if ($nodeCount -eq 1) {
             
 			$intCmd = "$infaHome\isp\bin\infacmd createintegrationservice -dn $domainName -nn $nodeName -un $domainUser -pd $domainPassword -sn $pcisName -rs  $pcrsName -ru $domainUser -rp $domainPassword $licenseNameOption -po codepage_id=2252 -sd -ev INFA_CODEPAGENAME=MS1252"
 			executeCommand $intCmd "Create Integration service" $true 
