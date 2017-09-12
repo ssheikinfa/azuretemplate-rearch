@@ -41,8 +41,8 @@ function executeCommand {
     Param([String]$command, [String]$logMesage = "No message", [bool]$exitOnFailure = $false, [int]$retry = 0)
     
     $counter = 0
-    $error.Clear()
-    do {   
+    do {
+        $error.Clear()
         Invoke-Expression $command -OutVariable outputMessage -ErrorVariable errorMessage
         $code = $error.Count
 
@@ -238,29 +238,29 @@ if($joinDomain -eq 0 ) {
             }
         }
 
-        $repoCmd = "$installerHome\isp\bin\infacmd createRepositoryService -dn $domainName -nn $nodeName -sn $pcrsName -so DBUser=$pcrsDBUser DatabaseType=$pcrsDBType DBPassword=""$pcrsDBPassword"" ConnectString=""$pcrsConnectString"" CodePage=""MS Windows Latin 1 (ANSI), superset of Latin1"" OperatingMode=NORMAL $pcrsTablespaceOption -un $domainUser -pd $domainPassword -sd true $licenseNameOption"
+        $repoCmd = "$infaHome\isp\bin\infacmd createRepositoryService -dn $domainName -nn $nodeName -sn $pcrsName -so DBUser=$pcrsDBUser DatabaseType=$pcrsDBType DBPassword=""$pcrsDBPassword"" ConnectString=""$pcrsConnectString"" CodePage=""MS Windows Latin 1 (ANSI), superset of Latin1"" OperatingMode=NORMAL $pcrsTablespaceOption -un $domainUser -pd $domainPassword -sd true $licenseNameOption"
         executeCommand $repoCmd "Create Repository service" $true
 
 		if ($nodeCount -eq 1 ) {
             
-			$intCmd = "$installerHome\isp\bin\infacmd createintegrationservice -dn $domainName -nn $nodeName -un $domainUser -pd $domainPassword -sn $pcisName -rs  $pcrsName -ru $domainUser -rp $domainPassword $licenseNameOption -po codepage_id=2252 -sd -ev INFA_CODEPAGENAME=MS1252"
+			$intCmd = "$infaHome\isp\bin\infacmd createintegrationservice -dn $domainName -nn $nodeName -un $domainUser -pd $domainPassword -sn $pcisName -rs  $pcrsName -ru $domainUser -rp $domainPassword $licenseNameOption -po codepage_id=2252 -sd -ev INFA_CODEPAGENAME=MS1252"
 			executeCommand $intCmd "Create Integration service" $true 
 		} else {
 
-			$gridCmd = "$installerHome\isp\bin\infacmd creategrid -dn $domainName -un $domainUser -pd $domainPassword -gn grid -nl $nodeName"
+			$gridCmd = "$infaHome\isp\bin\infacmd creategrid -dn $domainName -un $domainUser -pd $domainPassword -gn grid -nl $nodeName"
 			executeCommand $gridCmd "Create Grid" $true 
 
-			$intCmd = "$installerHome\isp\bin\infacmd createintegrationservice -dn $domainName -gn grid -un $domainUser -pd $domainPassword -sn $pcisName -rs  $pcrsName -ru $domainUser -rp $domainPassword $licenseNameOption -po codepage_id=2252 -sd -ev INFA_CODEPAGENAME=MS1252"
+			$intCmd = "$infaHome\isp\bin\infacmd createintegrationservice -dn $domainName -gn grid -un $domainUser -pd $domainPassword -sn $pcisName -rs  $pcrsName -ru $domainUser -rp $domainPassword $licenseNameOption -po codepage_id=2252 -sd -ev INFA_CODEPAGENAME=MS1252"
 			executeCommand $intCmd "Create Integration service on Grid" $true 
 
-			$updSrvCmd = "$installerHome\isp\bin\infacmd updateServiceProcess -dn $domainName -un $domainUser -pd $domainPassword -sn $pcisName -nn $nodeName -po CodePage_Id=2252"
+			$updSrvCmd = "$infaHome\isp\bin\infacmd updateServiceProcess -dn $domainName -un $domainUser -pd $domainPassword -sn $pcisName -nn $nodeName -po CodePage_Id=2252"
 			executeCommand $updSrvCmd "Update Integration service process" $true  
 		}
 	}
 } else { 
-    updGrdCmd = "$installerHome\isp\bin\infacmd updategrid -dn $domainName -un $domainUser -pd $domainPassword -gn grid -nl $nodeName -ul"
+    updGrdCmd = "$infaHome\isp\bin\infacmd updategrid -dn $domainName -un $domainUser -pd $domainPassword -gn grid -nl $nodeName -ul"
     executeCommand $updSrvCmd "Updating the grid with node" $true 3
 
-	$updSrvCmd = "$installerHome\isp\bin\infacmd updateServiceProcess -dn $domainName -un $domainUser -pd $domainPassword -sn $pcisName -nn $nodeName -po CodePage_Id=2252 -ev INFA_CODEPAGENAME=MS1252"
+	$updSrvCmd = "$infaHome\isp\bin\infacmd updateServiceProcess -dn $domainName -un $domainUser -pd $domainPassword -sn $pcisName -nn $nodeName -po CodePage_Id=2252 -ev INFA_CODEPAGENAME=MS1252"
 	executeCommand $updSrvCmd "Update Integration service process" $true 3
 }
