@@ -219,7 +219,7 @@ then
 	if [ "$dbType" = "MSSQLServer" ]
 	then
 		$pcrsDBType="MSSQLServer"
-		$pcrsConnectString=$dbHost + "@" + $dbName
+		$pcrsConnectString="$dbHost@$dbName"
 		$pcrsTablespace=""
 
 	elif [ "$dbType" = "Oracle" ]
