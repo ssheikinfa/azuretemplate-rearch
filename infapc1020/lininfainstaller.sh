@@ -242,7 +242,7 @@ then
 	echo "creating PC services" >> $logfile
 
 	date >> $logfile
-    isp/bin/infacmd.sh  createrepositoryservice -dn $domainName -nn $nodeName -sn $pcrsName -so DBUser=$pcrsDBUser DatabaseType=$dbType DBPassword=$pcrsDBPassword ConnectString=$dbName CodePage="ISO 8859-1 Western European"  OperatingMode=NORMAL $pcrsTablespace -un $domainUser -pd $domainPassword $licenseNameOption -sd &>> $logfile
+    isp/bin/infacmd.sh  createrepositoryservice -dn $domainName -nn $nodeName -sn $pcrsName -so DBUser=$pcrsDBUser DatabaseType=$pcrsDBType DBPassword=$pcrsDBPassword ConnectString=$pcrsConnectString CodePage="ISO 8859-1 Western European"  OperatingMode=NORMAL $pcrsTablespace -un $domainUser -pd $domainPassword $licenseNameOption -sd &>> $logfile
     EXITCODE=$?
 
     if [ $nodeCount -eq 1 ]
