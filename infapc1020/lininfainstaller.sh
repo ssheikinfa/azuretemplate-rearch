@@ -218,21 +218,21 @@ then
 	
 	if [ "$dbType" = "MSSQLServer" ]
 	then
-		$pcrsDBType="MSSQLServer"
-		$pcrsConnectString="$dbHost@$dbName"
-		$pcrsTablespace=""
+		pcrsDBType="MSSQLServer"
+		pcrsConnectString="$dbHost@$dbName"
+		pcrsTablespace=""
 
 	elif [ "$dbType" = "Oracle" ]
 	then
-		$pcrsDBType="Oracle"
-		$pcrsConnectString=$dbName
-		$pcrsTablespace=""
+		pcrsDBType="Oracle"
+		pcrsConnectString=$dbName
+		pcrsTablespace=""
 
 	elif [ "$dbType" = "DB2" ] 
 	then
-		$pcrsDBType="DB2"
-		$pcrsConnectString=$dbName
-		$pcrsTablespace="TablespaceName=$dbTablespace" 
+		pcrsDBType="DB2"
+		pcrsConnectString=$dbName
+		pcrsTablespace="TablespaceName=$dbTablespace" 
 	else
 		echo Unsupported database
 		exit 255
