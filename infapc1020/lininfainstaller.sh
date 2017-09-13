@@ -218,19 +218,21 @@ then
 	
 	if [ "$dbType" = "MSSQLServer" ]
 	then
-		$pcrsDBType = "MSSQLServer"
-		$pcrsConnectString = $dbHost + "@" + $dbName
-		$pcrsTablespace = ""
+		$pcrsDBType="MSSQLServer"
+		$pcrsConnectString=$dbHost + "@" + $dbName
+		$pcrsTablespace=""
+
 	elif [ "$dbType" = "Oracle" ]
 	then
-		$pcrsDBType = "Oracle"
-		$pcrsConnectString = $dbName
-		$pcrsTablespace = ""
+		$pcrsDBType="Oracle"
+		$pcrsConnectString=$dbName
+		$pcrsTablespace=""
+
 	elif [ "$dbType" = "DB2" ] 
 	then
-		$pcrsDBType = "DB2"
-		$pcrsConnectString = $dbName
-		$pcrsTablespace = "TablespaceName=$dbTablespace" 
+		$pcrsDBType="DB2"
+		$pcrsConnectString=$dbName
+		$pcrsTablespace="TablespaceName=$dbTablespace" 
 	else
 		echo Unsupported database
 		exit 255
@@ -254,7 +256,7 @@ then
 	  	EXITCODE=$(($? | EXITCODE))
 
 		date >> $logfile
-		isp/bin/infacmd.sh  createintegrationservice -dn $domainName -gn grid -un $domainUser -pd $domainPassword -sn $pcisName -rs  $pcrsName -ru $domainUser -rp $domainPassword  -po codepage_id=4 -sd &>> $logfile
+		isp/bin/infacmd.sh  createintegrationservice -dn $domainName -gn grid -un $domainUser -pd $domainPassword -sn $pcisName -rs  $pcrsName -ru $domainUser -rp $domainPassword  -po codepage_id=4 $licenseNameOption -sd &>> $logfile
 	  	EXITCODE=$(($? | EXITCODE))
 
 	fi
