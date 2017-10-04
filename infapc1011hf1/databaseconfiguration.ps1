@@ -90,13 +90,14 @@ Invoke-Command -Credential $credential -ComputerName $env:COMPUTERNAME -Argument
     mkdir -Path C:\Informatica\Archive\logs 2> $null
     mkdir -Path C:\SQL_DATA
     
-    $newDatabase = "CREATE DATABASE " + $dbName + " ON ( NAME = " + $dbName + "_dat, FILENAME = 'C:\SQL_DATA\" + $dbName +".mdf', SIZE = 10, MAXSIZE = 1000, FILEGROWTH = 5 ) LOG ON ( NAME = " + $dbName + "_log, FILENAME = 'C:\SQL_DATA\" + $dbName + "log.ldf', SIZE = 5MB, MAXSIZE = 500MB, FILEGROWTH = 5MB )"
-    $newLogin = "CREATE LOGIN " + $dbUsername +  " WITH PASSWORD = '" + ($dbPassword -replace "'","''") + "'"
-    $newUser = "CREATE USER " + $dbUsername + " FOR LOGIN " + $dbUsername + " WITH DEFAULT_SCHEMA = " + $dbUsername
-    $updateUserRole = "ALTER ROLE db_datareader ADD MEMBER " + $dbUsername + ";" + 
-                        "ALTER ROLE db_datawriter ADD MEMBER " + $dbUsername + ";" + 
-                        "ALTER ROLE db_ddladmin ADD MEMBER " + $dbUsername
-    $newSchema = "CREATE SCHEMA " + $dbUsername + " AUTHORIZATION " + $dbUsername
+    $newDatabase = "CREATE DATABASE """ + $dbName + """ ON ( NAME = """ + $dbName + "_dat"", FILENAME = ""C:\SQL_DATA\" + $dbName +".mdf"", SIZE = 10, MAXSIZE = 1000, FILEGROWTH = 5 ) LOG ON ( NAME = """ + $dbName + "_log"", FILENAME = ""C:\SQL_DATA\" + $dbName + "log.ldf"", SIZE = 5MB, MAXSIZE = 500MB, FILEGROWTH = 5MB )"
+    
+	$newLogin = "CREATE LOGIN """ + $dbUsername +  """ WITH PASSWORD = '" + ($dbPassword -replace "'","''") + "'"
+	$newUser = "CREATE USER """ + $dbUsername + """ FOR LOGIN """ + $dbUsername + """ WITH DEFAULT_SCHEMA = """ + $dbUsername +""""
+	$updateUserRole = "ALTER ROLE db_datareader ADD MEMBER """ + $dbUsername + """;" + 
+                        "ALTER ROLE db_datawriter ADD MEMBER """ + $dbUsername + """;" + 
+                        "ALTER ROLE db_ddladmin ADD MEMBER """ + $dbUsername + """"
+	$newSchema = "CREATE SCHEMA """ + $dbUsername + """ AUTHORIZATION """ + $dbUsername + """"
 
 	waitTillDatabaseIsAlive master
 	
