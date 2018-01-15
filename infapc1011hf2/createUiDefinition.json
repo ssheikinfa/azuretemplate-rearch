@@ -416,10 +416,6 @@
                                         {
                                             "label": "SQL Server 2016",
                                             "value": "sqlserver2016"
-                                        },
-                                        {
-                                            "label": "Azure SQL Server",
-                                            "value": "azuresqlserver"
                                         }
                                     ]
                                 }
@@ -568,7 +564,7 @@
                                 "toolTip": "Database user to create PowerCenter Repository metadata",
                                 "constraints": {
                                     "required": true,
-                                    "regex": "(?!^(p|P)(u|U)(b|B)(l|L)(i|I)(c|C)$)(?!^(d|D)(b|B)(o|O)$)(?!^(s|S)(y|Y)(s|S)$)(?!^(g|G)(u|U)(e|E)(s|S)(t|T)$)(^[a-zA-Z][a-zA-Z0-9_-]{2,127}.*$)",
+                                    "regex": "(?!^(p|P)(u|U)(b|B)(l|L)(i|I)(c|C)$)(?!^(d|D)(b|B)(o|O)$)(?!^(s|S)(y|Y)(s|S)$)(?!^(g|G)(u|U)(e|E)(s|S)(t|T)$)(^[a-zA-Z][a-zA-Z0-9_-]{2,127}$)",
                                     "validationMessage": "Username must begin with an alphabet, only alphanumeric characters, hyphen and underscore are allowed, and the value must be 3-128 characters in length. Usernames sa, public, dbo, sys, and guest are not allowed"
                                 }
                             },
