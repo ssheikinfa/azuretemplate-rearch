@@ -46,7 +46,7 @@
             "type": "string"
         },
         "storageRef": { 
-            "value": "[reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageName'))).primaryEndpoints.blob]",
+            "value": "[reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageName')), '2016-01-01').primaryEndpoints.blob]",
             "type": "string"
         }
     }
