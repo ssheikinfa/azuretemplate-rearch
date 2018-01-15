@@ -45,3 +45,10 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+infapc1020/azuredeploy.parameters.json
+infapc1020/bin/Debug/staging/infapc1020/azuredeploy.parameters.json
+infapc1020/bin/Debug/staging/infapc1020/Deploy-AzureResourceGroup.ps1
+infapc1020/Deployment.targets
+infapc_on_azure.suo
+infapc_on_azure.v12.suo
+infapc1020/azuredeploy.validation.json

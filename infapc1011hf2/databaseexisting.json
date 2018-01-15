@@ -1,0 +1,76 @@
+﻿{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "type": "string"
+        },
+        "storageName": {
+            "type": "string"
+        },
+        "storageID": {
+            "type": "string"
+        },
+        "storageRef": {
+            "type": "string"
+        },
+        "dbType": {
+            "type": "string"
+        },
+        "dbVMName": {
+            "type": "string"
+        },
+        "dbVMAdminUsername": {
+            "type": "string"
+        },
+        "dbVMAdminPassword": {
+            "type": "securestring"
+        },
+        "dbVMSize": {
+            "type": "string"
+        },
+        "dbUser": {
+            "type": "string"
+        },
+        "dbPassword": {
+            "type": "securestring"
+        },
+		"dbPCRSUser": {
+            "type": "string"
+        },
+        "dbPCRSPassword": {
+            "type": "string"
+        },
+        "dbName": {
+            "type": "string"
+        },
+        "vnetName": {
+            "type": "string"
+        },
+        "subnetName": {
+            "type": "string"
+        },
+        "subnetId": {
+            "type": "string"
+        },
+        "nsgName": {
+            "type": "string"
+        },
+        "baseUrl": {
+            "type": "string"
+        },
+        "informaticaTags": {
+            "type": "object"
+        }
+    },
+    "variables": {
+    },
+    "resources": [
+    ],
+    "outputs": {
+        "status": {
+            "value": "Skipping database creation",
+            "type": "string"
+        }
+    }
+}

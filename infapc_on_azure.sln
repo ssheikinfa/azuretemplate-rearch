@@ -7,6 +7,8 @@ Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "infapc1011hf1", "infapc1011
 EndProject
 Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "infapc1020", "infapc1020\infapc1020.deployproj", "{E8BB8373-3E41-4001-A44C-9E42484BA09E}"
 EndProject
+Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "infapc1011hf2", "infapc1011hf2\infapc1011hf2.deployproj", "{D8EF48EC-7460-49DD-A912-E8CCCB816956}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{E8BB8373-3E41-4001-A44C-9E42484BA09E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E8BB8373-3E41-4001-A44C-9E42484BA09E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E8BB8373-3E41-4001-A44C-9E42484BA09E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8EF48EC-7460-49DD-A912-E8CCCB816956}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8EF48EC-7460-49DD-A912-E8CCCB816956}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8EF48EC-7460-49DD-A912-E8CCCB816956}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8EF48EC-7460-49DD-A912-E8CCCB816956}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
