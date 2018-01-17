@@ -689,7 +689,7 @@
                         "label": "Service database user",
                         "elements": [
                             {
-                                "name": "infaPCServiceExistingDBUser",
+                                "name": "infaExistingPCServiceDBUser",
                                 "type": "Microsoft.Common.TextBox",
                                 "label": "Informatica Repository DB user",
                                 "defaultValue": "",
@@ -699,7 +699,7 @@
                                 }
                             },
                             {
-                                "name": "infaPCServiceExistingDBPassword",
+                                "name": "infaExistingPCServiceDBPassword",
                                 "type": "Microsoft.Common.PasswordBox",
                                 "label": {
                                     "password": "Informatica Repository DB password",
@@ -804,10 +804,10 @@
             "dbTablespace": "[steps('databaseConfiguration').databaseExistingConfig.databaseExistingTablespace]",
             "dbVMAdminUsername": "[steps('databaseConfiguration').databaseConfig.dbVMAdminUsername]",
             "dbVMAdminPassword": "[steps('databaseConfiguration').databaseConfig.dbVMAdminPassword.password]",
-            "dbUser": "[coalesce(steps('databaseConfiguration').domainDatabaseUser.infaDomainDBUser, steps('databaseConfiguration').domainExistingDatabaseUser.infaDomainExistingDBUser)]",
-            "dbPassword": "[coalesce(steps('databaseConfiguration').domainDatabaseUser.infaDomainDBPassword, steps('databaseConfiguration').domainExistingDatabaseUser.infaDomainExistingDBPassword)]",
-            "dbPCRSUser": "[coalesce(steps('databaseConfiguration').serviceDatabaseUser.infaPCServiceDBUser, steps('databaseConfiguration').serviceExistingDatabaseUser.infaPCServiceExistingDBUser)]",
-            "dbPCRSPassword": "[coalesce(steps('databaseConfiguration').serviceDatabaseUser.infaPCServiceDBPassword, steps('databaseConfiguration').serviceExistingDatabaseUser.infaPCServiceExistingDBPassword)]",
+            "dbUser": "[coalesce(steps('databaseConfiguration').domainDatabaseUser.infaDomainDBUser, steps('databaseConfiguration').domainExistingDatabaseUser.infaExistingDomainDBUser)]",
+            "dbPassword": "[coalesce(steps('databaseConfiguration').domainDatabaseUser.infaDomainDBPassword, steps('databaseConfiguration').domainExistingDatabaseUser.infaExistingDomainDBPassword)]",
+            "dbPCRSUser": "[coalesce(steps('databaseConfiguration').serviceDatabaseUser.infaPCServiceDBUser, steps('databaseConfiguration').serviceExistingDatabaseUser.infaExistingPCServiceDBUser)]",
+            "dbPCRSPassword": "[coalesce(steps('databaseConfiguration').serviceDatabaseUser.infaPCServiceDBPassword, steps('databaseConfiguration').serviceExistingDatabaseUser.infaExistingPCServiceDBPassword)]",
 
             "storageExistingOrNew": "[steps('infraConfiguration').storageAccount.newOrExisting]",
             "existingStorageRG": "[steps('infraConfiguration').storageAccount.resourceGroup]",
