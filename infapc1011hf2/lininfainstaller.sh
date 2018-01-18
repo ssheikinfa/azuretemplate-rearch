@@ -167,7 +167,7 @@ then
 fi
 
 # To speed up installation
-mv $infainstallerloc/source $infainstallerloc/source_temp
+mv $infainstallerloc/source $infainstallerloc/source_backup
 mkdir $infainstallerloc/source
 mv $infainstallerloc/unjar_esd.sh $infainstallerloc/unjar_esd.sh_temp
 head -1 $infainstallerloc/unjar_esd.sh_temp > $infainstallerloc/unjar_esd.sh
@@ -180,7 +180,7 @@ echo Y Y | sh silentinstall.sh
 
 
 # Revert speed up changes
-mv $infainstallerloc/source_temp/* $infainstallerloc/source
+mv $infainstallerloc/source_backup/* $infainstallerloc/source
 rm $infainstallerloc/unjar_esd.sh
 mv $infainstallerloc/unjar_esd.sh_temp $infainstallerloc/unjar_esd.sh
 
