@@ -309,9 +309,9 @@
             "type": "string",
             "metadata": {
                 "description": "Base URL for Marketplace",
-                "artifactsBaseUrl": "https://raw.githubusercontent.com/vijayanand17/azuretemplate-rearch/master/infapc1011HF2"
+                "artifactsBaseUrl": "https://raw.githubusercontent.com/vijayanand17/azuretemplate-rearch/master/infapc1011hf2"
             },
-            "defaultValue": "https://raw.githubusercontent.com/vijayanand17/azuretemplate-rearch/master/infapc1011HF2"
+            "defaultValue": "https://raw.githubusercontent.com/vijayanand17/azuretemplate-rearch/master/infapc1011hf2"
         },
         "informaticaTags": {
             "type": "object",

@@ -35,7 +35,7 @@ domainLicenseURL=${26}
 
 echo Starting Informatica setup...
 echo Number of parameters $#
-echo $domainVersion $domainHost $domainName $domainUser $domainPassword $nodeCount $nodeName $nodePort $pcrsName $pcisName $dbNewOrExisting $dbType $dbName $dbUser $dbPassword pcrsDBUser, pcrsDBPassword $dbHost $dbPort $sitekeyKeyword $joinDomain $osUserName $storageName $storageKey $domainLicenseURL
+echo $domainVersion $domainHost $domainName $domainUser $domainPassword $nodeCount $nodeName $nodePort $pcrsName $pcisName $dbNewOrExisting $dbType $dbName $dbUser $dbPassword $pcrsDBUser $pcrsDBPassword $dbHost $dbPort $sitekeyKeyword $joinDomain $osUserName $storageName $storageKey $domainLicenseURL
 
 yum -y install cifs-utils
 
@@ -205,7 +205,7 @@ fi
 
 # Get license name from domain
 licenseNameOption=""
-if [ "$infaLicense" != "#_no_license_#" ]
+if [ "$domainLicenseURL" != "#_no_license_#" ]
 then
 	licenseName=`isp/bin/infacmd.sh listLicenses -dn $domainName -un $domainUser -pd $domainPassword | head -1 | awk '{print $1}'`
 	licenseNameOption="-ln $licenseName"
