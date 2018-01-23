@@ -167,7 +167,7 @@ then
 fi
 
 # To speed up installation
-mv $infainstallerloc/source $infainstallerloc/source_backup
+mv $infainstallerloc/source $infainstallerloc/source_temp
 mkdir $infainstallerloc/source
 mv $infainstallerloc/unjar_esd.sh $infainstallerloc/unjar_esd.sh_temp
 head -1 $infainstallerloc/unjar_esd.sh_temp > $infainstallerloc/unjar_esd.sh
@@ -180,7 +180,7 @@ echo Y Y | sh silentinstall.sh
 
 
 # Revert speed up changes
-mv $infainstallerloc/source_backup/* $infainstallerloc/source
+mv $infainstallerloc/source_temp/* $infainstallerloc/source
 rm $infainstallerloc/unjar_esd.sh
 mv $infainstallerloc/unjar_esd.sh_temp $infainstallerloc/unjar_esd.sh
 
@@ -239,33 +239,39 @@ then
 	fi
 
 	
-	echo "creating PC services" >> $logfile
+	echo "Creating PC services" >> $logfile
 
 	date >> $logfile
+	echo "Creating PCRS... " >> $logfile
     isp/bin/infacmd.sh  createrepositoryservice -dn $domainName -nn $nodeName -sn $pcrsName -so DBUser=$pcrsDBUser DatabaseType=$pcrsDBType DBPassword=$pcrsDBPassword ConnectString=$pcrsConnectString CodePage="ISO 8859-1 Western European"  OperatingMode=NORMAL $pcrsTablespace -un $domainUser -pd $domainPassword $licenseNameOption -sd &>> $logfile
     EXITCODE=$?
 
     if [ $nodeCount -eq 1 ]
 	then
 		date >> $logfile
+		echo "Creating PCIS... " >> $logfile
 		isp/bin/infacmd.sh  createintegrationservice -dn $domainName -nn $nodeName -un $domainUser -pd $domainPassword -sn $pcisName  -rs $pcrsName  -ru $domainUser -rp $domainPassword -po codepage_id=4 $licenseNameOption -sd &>> $logfile
 	   	EXITCODE=$(($? | EXITCODE))
 	else 
 		date >> $logfile
+		echo "Creating GRID... " >> $logfile
 		isp/bin/infacmd.sh  creategrid -dn $domainName -un $domainUser -pd $domainPassword -gn grid -nl $nodeName &>> $logfile
 	  	EXITCODE=$(($? | EXITCODE))
 
 		date >> $logfile
+		echo "Creating PCIS on GRID... " >> $logfile
 		isp/bin/infacmd.sh  createintegrationservice -dn $domainName -gn grid -un $domainUser -pd $domainPassword -sn $pcisName -rs  $pcrsName -ru $domainUser -rp $domainPassword  -po codepage_id=4 $licenseNameOption -sd &>> $logfile
 	  	EXITCODE=$(($? | EXITCODE))
 
 	fi
 else
 	date >> $logfile
+	echo "Adding node to GRID... " >> $logfile
     isp/bin/infacmd.sh  updategrid -dn $domainName -un $domainUser -pd $domainPassword -gn grid -nl $nodeName -ul &>> $logfile
 	EXITCODE=$?
 
 	date >> $logfile
+	echo "Updating service node process... " >> $logfile
     isp/bin/infacmd.sh  updateServiceProcess -dn $domainName -un $domainUser -pd $domainPassword -sn $pcisName -nn $nodeName -po CodePage_Id=4 &>> $logfile
     EXITCODE=$(($? | EXITCODE))
      
