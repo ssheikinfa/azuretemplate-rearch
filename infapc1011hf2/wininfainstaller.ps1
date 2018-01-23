@@ -66,12 +66,12 @@ $shareName = "infaaeshare"
 
 # Informatica version needs to be handled here
 $infaHome = $env:SystemDrive + "\Informatica\10.1.1"
-$installerHome = $env:SystemDrive + "\Informatica\Archive\informatica_1011HF1_server_winem-64t"
+$installerHome = $env:SystemDrive + "\Informatica\Archive\informatica_1011HF2_server_winem-64t"
 $utilityHome = $env:SystemDrive + "\Informatica\Archive\utilities"
 $logHome = $env:SystemDrive + "\Informatica\Archive\service_creation.log"
 
 #Setting Java in path
-$env:JRE_HOME= $installerHome + "\source\java\jre"
+$env:JRE_HOME= $installerHome + "\source_backup\java\jre"
 $env:Path=$env:JRE_HOME+"\bin;" + $env:Path
 
 # DB Configurations if required
@@ -174,8 +174,8 @@ if($dbType -eq "DB2" -and $dbTablespace -ne "#_no_tablespace_#") {
 }
 
 # To speed-up installation
-Rename-Item $installerHome/source $installerHome/source_temp
-mkdir $installerHome/source
+#Rename-Item $installerHome/source $installerHome/source_temp
+#mkdir $installerHome/source
 
 echo "Installing Informatica domain"
 cd $installerHome
@@ -184,7 +184,8 @@ Start-Process $installCmd -Verb runAs -workingdirectory $installerHome -wait | O
 
 # Revert speed-up changes
 rmdir $installerHome/source
-Rename-Item $installerHome/source_temp $installerHome/source
+#Rename-Item $installerHome/source_temp $installerHome/source
+Rename-Item $installerHome/source_backup $installerHome/source
 
 # Remove license file from VM
 if($infaLicenseFile -ne "") {
