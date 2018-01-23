@@ -263,7 +263,7 @@ if($joinDomain -eq 0 ) {
 	}
 } else { 
     $updGrdCmd = "$infaHome\isp\bin\infacmd updategrid -dn $domainName -un $domainUser -pd $domainPassword -gn grid -nl $nodeName -ul"
-    executeCommand $updSrvCmd "Updating the grid with node" $true 3
+    executeCommand $updGrdCmd "Updating the grid with node" $true 3
 
 	$updSrvCmd = "$infaHome\isp\bin\infacmd updateServiceProcess -dn $domainName -un $domainUser -pd $domainPassword -sn $pcisName -nn $nodeName -po CodePage_Id=2252 -ev INFA_CODEPAGENAME=MS1252"
 	executeCommand $updSrvCmd "Update Integration service process" $true 3
