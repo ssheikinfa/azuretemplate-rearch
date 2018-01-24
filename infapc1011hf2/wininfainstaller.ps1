@@ -127,6 +127,8 @@ echo "Editing Informatica silent installation file"
 `
 -replace '^CLOUD_SUPPORT_ENABLE=.*$',"CLOUD_SUPPORT_ENABLE=$CLOUD_SUPPORT_ENABLE"  `
 `
+-replace '^UPGRADE_WITHOUT_BIGDATA=.*$',"UPGRADE_WITHOUT_BIGDATA=1"  `
+`
 -replace '^ENABLE_USAGE_COLLECTION=.*$',"ENABLE_USAGE_COLLECTION=1"  `
 `
 -replace '^USER_INSTALL_DIR=.*$',"USER_INSTALL_DIR=$userInstallDir"  `

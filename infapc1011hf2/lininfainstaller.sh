@@ -37,7 +37,7 @@ echo Starting Informatica setup...
 echo Number of parameters $#
 echo $domainVersion $domainHost $domainName $domainUser $domainPassword $nodeCount $nodeName $nodePort $pcrsName $pcisName $dbNewOrExisting $dbType $dbName $dbUser $dbPassword $pcrsDBUser $pcrsDBPassword $dbHost $dbPort $sitekeyKeyword $joinDomain $osUserName $storageName $storageKey $domainLicenseURL
 
-yum -y install cifs-utils
+#yum -y install cifs-utils
 
 #Usage
 if [ $# -ne 26 ]
@@ -122,6 +122,7 @@ sed -i s/^CREATE_DOMAIN=.*/CREATE_DOMAIN=$createDomain/ $infainstallerloc/Silent
 sed -i s/^JOIN_DOMAIN=.*/JOIN_DOMAIN=$joinDomain/ $infainstallerloc/SilentInput.properties
 
 sed -i s/^CLOUD_SUPPORT_ENABLE=.*/CLOUD_SUPPORT_ENABLE=$cloudsupportenable/ $infainstallerloc/SilentInput.properties
+
 
 sed -i s/^ENABLE_USAGE_COLLECTION=.*/ENABLE_USAGE_COLLECTION=1/ $infainstallerloc/SilentInput.properties
 
