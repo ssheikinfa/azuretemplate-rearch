@@ -123,6 +123,7 @@ sed -i s/^JOIN_DOMAIN=.*/JOIN_DOMAIN=$joinDomain/ $infainstallerloc/SilentInput.
 
 sed -i s/^CLOUD_SUPPORT_ENABLE=.*/CLOUD_SUPPORT_ENABLE=$cloudsupportenable/ $infainstallerloc/SilentInput.properties
 
+sed -i s/^UPGRADE_WITHOUT_BIGDATA=.*/UPGRADE_WITHOUT_BIGDATA=1/ $infainstallerloc/SilentInput.properties
 
 sed -i s/^ENABLE_USAGE_COLLECTION=.*/ENABLE_USAGE_COLLECTION=1/ $infainstallerloc/SilentInput.properties
 
