@@ -99,18 +99,22 @@ Invoke-Command -Credential $credential -ComputerName $env:COMPUTERNAME -Argument
 	function createDatabaseUser {
 		Param([String] $dbUsername, [String] $dbPassword)
 
-		$newLogin = "CREATE LOGIN """ + $dbUsername +  """ WITH PASSWORD = '" + ($dbPassword -replace "'","''") + "'"
-		$newUser = "CREATE USER """ + $dbUsername + """ FOR LOGIN """ + $dbUsername + """ WITH DEFAULT_SCHEMA = """ + $dbUsername +""""
-		$updateUserRole = "ALTER ROLE db_datareader ADD MEMBER """ + $dbUsername + """;" + 
-                        "ALTER ROLE db_datawriter ADD MEMBER """ + $dbUsername + """;" + 
-                        "ALTER ROLE db_ddladmin ADD MEMBER """ + $dbUsername + """"
-		$newSchema = "CREATE SCHEMA """ + $dbUsername + """ AUTHORIZATION """ + $dbUsername + """"
+		if(-not [string]::IsNullOrEmpty($dbUsername) -and -not [string]::IsNullOrEmpty($dbPassword)) {
+			$newLogin = "CREATE LOGIN """ + $dbUsername +  """ WITH PASSWORD = '" + ($dbPassword -replace "'","''") + "'"
+			$newUser = "CREATE USER """ + $dbUsername + """ FOR LOGIN """ + $dbUsername + """ WITH DEFAULT_SCHEMA = """ + $dbUsername +""""
+			$updateUserRole = "ALTER ROLE db_datareader ADD MEMBER """ + $dbUsername + """;" + 
+							"ALTER ROLE db_datawriter ADD MEMBER """ + $dbUsername + """;" + 
+							"ALTER ROLE db_ddladmin ADD MEMBER """ + $dbUsername + """"
+			$newSchema = "CREATE SCHEMA """ + $dbUsername + """ AUTHORIZATION """ + $dbUsername + """"
 
-		writeLog "Creating db user: $dbUsername" 
-		executeStatement $newLogin $dbName
-		executeStatement $newUser $dbName
-		executeStatement $updateUserRole $dbName
-		executeStatement $newSchema $dbName
+			writeLog "Creating db user: $dbUsername" 
+			executeStatement $newLogin $dbName
+			executeStatement $newUser $dbName
+			executeStatement $updateUserRole $dbName
+			executeStatement $newSchema $dbName
+		} else {
+			writeLog "Skipped db user creation: $dbUsername" 
+		}
 	}
  
     $error.clear()

@@ -35,7 +35,7 @@ domainLicenseURL=${26}
 
 echo Starting Informatica setup...
 echo Number of parameters $#
-echo $domainVersion $domainHost $domainName $domainUser $domainPassword $nodeCount $nodeName $nodePort $pcrsName $pcisName $dbNewOrExisting $dbType $dbName $dbUser $dbPassword $pcrsDBUser $pcrsDBPassword $dbHost $dbPort $sitekeyKeyword $joinDomain $osUserName $storageName $storageKey $domainLicenseURL
+#echo $domainVersion $domainHost $domainName $domainUser $domainPassword $nodeCount $nodeName $nodePort $pcrsName $pcisName $dbNewOrExisting $dbType $dbName $dbUser $dbPassword $pcrsDBUser $pcrsDBPassword $dbHost $dbPort $sitekeyKeyword $joinDomain $osUserName $storageName $storageKey $domainLicenseURL
 
 #yum -y install cifs-utils
 
