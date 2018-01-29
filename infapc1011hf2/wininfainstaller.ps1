@@ -216,7 +216,7 @@ if($infaLicense -ne "#_no_license_#") {
 
 # Creating PC services
 if($joinDomain -eq 0 ) {
-    if(-not [string]::IsNullOrEmpty($pcrsDBUser) -and -not [string]::IsNullOrEmpty($pcrsDBPassword)) {
+    if ($pcrsDBUsername -eq 'skip' -and $pcrsDBPassword -eq 'skip') {
 		echo "Creating PowerCenter services"
 
 	    switch -Wildcard ($dbType) {
@@ -267,6 +267,8 @@ if($joinDomain -eq 0 ) {
     $updGrdCmd = "$infaHome\isp\bin\infacmd updategrid -dn $domainName -un $domainUser -pd $domainPassword -gn grid -nl $nodeName -ul"
     executeCommand $updGrdCmd "Updating the grid with node" $true 3
 
-	$updSrvCmd = "$infaHome\isp\bin\infacmd updateServiceProcess -dn $domainName -un $domainUser -pd $domainPassword -sn $pcisName -nn $nodeName -po CodePage_Id=2252 -ev INFA_CODEPAGENAME=MS1252"
-	executeCommand $updSrvCmd "Update Integration service process" $true 3
+	if ($pcrsDBUsername -eq 'skip' -and $pcrsDBPassword -eq 'skip') {
+		$updSrvCmd = "$infaHome\isp\bin\infacmd updateServiceProcess -dn $domainName -un $domainUser -pd $domainPassword -sn $pcisName -nn $nodeName -po CodePage_Id=2252 -ev INFA_CODEPAGENAME=MS1252"
+		executeCommand $updSrvCmd "Update Integration service process" $true 3
+	}
 }

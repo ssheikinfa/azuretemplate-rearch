@@ -362,7 +362,19 @@
             "db2": "DB2"
         },
         "dbType": "[variables('dbTypes')[parameters('dbType')]]",
-        "dbPort": "[int(parameters('dbPort'))]"
+        "dbPort": "[int(parameters('dbPort'))]",
+
+        "pcServiceUsers": {
+            "create": "[parameters('dbPCRSUser')]",
+            "skip": "skip"
+        },
+        "pcServicePasswords": {
+            "create": "[parameters('dbPCRSPassword')]",
+            "skip": "skip"
+        },
+
+        "pcServiceUser": "[variables('pcServiceUsers')[parameters('infaPCSkipOrCreate')]]",
+        "pcServicePassword": "[variables('pcServicePasswords')[parameters('infaPCSkipOrCreate')]]"
     },
     "resources": [
         {
@@ -502,10 +514,10 @@
                         "value": "[parameters('dbPassword')]"
                     },
                     "dbPCRSUser": {
-                        "value": "[parameters('dbPCRSUser')]"
+                        "value": "[variables('pcServiceUser')]"
                     },
                     "dbPCRSPassword": {
-                        "value": "[parameters('dbPCRSPassword')]"
+                        "value": "[variables('pcServicePassword')]"
                     },
                     "dbName": {
                         "value": "[parameters('dbName')]"
@@ -594,10 +606,10 @@
                         "value": "[parameters('dbPassword')]"
                     },
                     "dbPCRSUser": {
-                        "value": "[parameters('dbPCRSUser')]"
+                        "value": "[variables('pcServiceUser')]"
                     },
                     "dbPCRSPassword": {
-                        "value": "[parameters('dbPCRSPassword')]"
+                        "value": "[variables('pcServicePassword')]"
                     },
                     "nodeVMSize": {
                         "value": "[parameters('nodeVMSize')]"

@@ -11,6 +11,11 @@
 #Debug
 #echo $osUsername $osPassword $dbUsername $dbPassword $dbName
 
+if ($pcrsDBUsername -eq 'skip' -and $pcrsDBPassword -eq 'skip') {
+	$pcrsDBUsername = ""
+	$pcrsDBPassword = ""
+}
+
 Enable-PSRemoting -Force
 $credential = New-Object System.Management.Automation.PSCredential @(($env:COMPUTERNAME + "\" + $osUsername), (ConvertTo-SecureString -String $osPassword -AsPlainText -Force))
 
@@ -112,8 +117,6 @@ Invoke-Command -Credential $credential -ComputerName $env:COMPUTERNAME -Argument
 			executeStatement $newUser $dbName
 			executeStatement $updateUserRole $dbName
 			executeStatement $newSchema $dbName
-		} else {
-			writeLog "Skipped db user creation: $dbUsername" 
 		}
 	}
  

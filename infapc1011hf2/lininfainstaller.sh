@@ -214,69 +214,72 @@ then
 	echo $licenseName
 fi
 
-
 if [ $joinDomain -eq 0 ]
 then
+	if [ "$pcrsDBUsername" != "skip" -a "$pcrsDBPassword" != "skip" ]
+	then
+		if [ "$dbType" = "MSSQLServer" ]
+		then
+			pcrsDBType="MSSQLServer"
+			pcrsConnectString="$dbHost@$dbName"
+			pcrsTablespace=""
+
+		elif [ "$dbType" = "Oracle" ]
+		then
+			pcrsDBType="Oracle"
+			pcrsConnectString=$dbName
+			pcrsTablespace=""
+
+		elif [ "$dbType" = "DB2" ] 
+		then
+			pcrsDBType="DB2"
+			pcrsConnectString=$dbName
+			pcrsTablespace="TablespaceName=$dbTablespace" 
+		else
+			echo Unsupported database
+			exit 255
+		fi
+
 	
-	if [ "$dbType" = "MSSQLServer" ]
-	then
-		pcrsDBType="MSSQLServer"
-		pcrsConnectString="$dbHost@$dbName"
-		pcrsTablespace=""
-
-	elif [ "$dbType" = "Oracle" ]
-	then
-		pcrsDBType="Oracle"
-		pcrsConnectString=$dbName
-		pcrsTablespace=""
-
-	elif [ "$dbType" = "DB2" ] 
-	then
-		pcrsDBType="DB2"
-		pcrsConnectString=$dbName
-		pcrsTablespace="TablespaceName=$dbTablespace" 
-	else
-		echo Unsupported database
-		exit 255
-	fi
-
-	
-	echo "Creating PC services" >> $logfile
-
-	date >> $logfile
-	echo "Creating PCRS... " >> $logfile
-    isp/bin/infacmd.sh  createrepositoryservice -dn $domainName -nn $nodeName -sn $pcrsName -so DBUser=$pcrsDBUser DatabaseType=$pcrsDBType DBPassword=$pcrsDBPassword ConnectString=$pcrsConnectString CodePage="ISO 8859-1 Western European"  OperatingMode=NORMAL $pcrsTablespace -un $domainUser -pd $domainPassword $licenseNameOption -sd &>> $logfile
-    EXITCODE=$?
-
-    if [ $nodeCount -eq 1 ]
-	then
-		date >> $logfile
-		echo "Creating PCIS... " >> $logfile
-		isp/bin/infacmd.sh  createintegrationservice -dn $domainName -nn $nodeName -un $domainUser -pd $domainPassword -sn $pcisName  -rs $pcrsName  -ru $domainUser -rp $domainPassword -po codepage_id=4 $licenseNameOption -sd &>> $logfile
-	   	EXITCODE=$(($? | EXITCODE))
-	else 
-		date >> $logfile
-		echo "Creating GRID... " >> $logfile
-		isp/bin/infacmd.sh  creategrid -dn $domainName -un $domainUser -pd $domainPassword -gn grid -nl $nodeName &>> $logfile
-	  	EXITCODE=$(($? | EXITCODE))
+		echo "Creating PC services" >> $logfile
 
 		date >> $logfile
-		echo "Creating PCIS on GRID... " >> $logfile
-		isp/bin/infacmd.sh  createintegrationservice -dn $domainName -gn grid -un $domainUser -pd $domainPassword -sn $pcisName -rs  $pcrsName -ru $domainUser -rp $domainPassword  -po codepage_id=4 $licenseNameOption -sd &>> $logfile
-	  	EXITCODE=$(($? | EXITCODE))
+		echo "Creating PCRS... " >> $logfile
+		isp/bin/infacmd.sh  createrepositoryservice -dn $domainName -nn $nodeName -sn $pcrsName -so DBUser=$pcrsDBUser DatabaseType=$pcrsDBType DBPassword=$pcrsDBPassword ConnectString=$pcrsConnectString CodePage="ISO 8859-1 Western European"  OperatingMode=NORMAL $pcrsTablespace -un $domainUser -pd $domainPassword $licenseNameOption -sd &>> $logfile
+		EXITCODE=$?
 
+		if [ $nodeCount -eq 1 ]
+		then
+			date >> $logfile
+			echo "Creating PCIS... " >> $logfile
+			isp/bin/infacmd.sh  createintegrationservice -dn $domainName -nn $nodeName -un $domainUser -pd $domainPassword -sn $pcisName  -rs $pcrsName  -ru $domainUser -rp $domainPassword -po codepage_id=4 $licenseNameOption -sd &>> $logfile
+	   		EXITCODE=$(($? | EXITCODE))
+		else 
+			date >> $logfile
+			echo "Creating GRID... " >> $logfile
+			isp/bin/infacmd.sh  creategrid -dn $domainName -un $domainUser -pd $domainPassword -gn grid -nl $nodeName &>> $logfile
+	  		EXITCODE=$(($? | EXITCODE))
+
+			date >> $logfile
+			echo "Creating PCIS on GRID... " >> $logfile
+			isp/bin/infacmd.sh  createintegrationservice -dn $domainName -gn grid -un $domainUser -pd $domainPassword -sn $pcisName -rs  $pcrsName -ru $domainUser -rp $domainPassword  -po codepage_id=4 $licenseNameOption -sd &>> $logfile
+	  		EXITCODE=$(($? | EXITCODE))
+
+		fi
 	fi
 else
 	date >> $logfile
 	echo "Adding node to GRID... " >> $logfile
     isp/bin/infacmd.sh  updategrid -dn $domainName -un $domainUser -pd $domainPassword -gn grid -nl $nodeName -ul &>> $logfile
 	EXITCODE=$?
-
-	date >> $logfile
-	echo "Updating service node process... " >> $logfile
-    isp/bin/infacmd.sh  updateServiceProcess -dn $domainName -un $domainUser -pd $domainPassword -sn $pcisName -nn $nodeName -po CodePage_Id=4 &>> $logfile
-    EXITCODE=$(($? | EXITCODE))
-     
+	
+	if [ "$pcrsDBUsername" != "skip" -a "$pcrsDBPassword" != "skip" ]
+	then
+		date >> $logfile
+		echo "Updating service node process... " >> $logfile
+		isp/bin/infacmd.sh  updateServiceProcess -dn $domainName -un $domainUser -pd $domainPassword -sn $pcisName -nn $nodeName -po CodePage_Id=4 &>> $logfile
+		EXITCODE=$(($? | EXITCODE))
+	fi     
 fi
 
 echo Changing ownership of directories
