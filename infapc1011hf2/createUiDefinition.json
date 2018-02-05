@@ -641,7 +641,9 @@
                                 "type": "Microsoft.Common.TextBox",
                                 "label": "Database name",
                                 "constraints": {
-                                    "required": true
+                                    "required": true,
+                                    "regex": "^(?!.*[\"$]).{1,255}$",
+                                    "validationMessage": "Double quote(\") and dollar($) is not allowed"
                                 }
                             },
                             {
