@@ -1,4 +1,5 @@
 ﻿{
+    "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
     "handler": "Microsoft.Compute.MultiVm",
     "version": "0.1.2-preview",
     "parameters": {
@@ -620,7 +621,9 @@
                                 "type": "Microsoft.Common.TextBox",
                                 "label": "Database machine name",
                                 "constraints": {
-                                    "required": true
+                                    "required": true,
+                                    "regex": "^(?!.*[\"$]).{1,255}$",
+                                    "validationMessage": "Double quote(\") and dollar($) is not allowed"
                                 }
                             },
                             {
@@ -628,7 +631,8 @@
                                 "type": "Microsoft.Common.TextBox",
                                 "label": "Database port",
                                 "constraints": {
-                                    "required": true
+                                    "required": true,
+                                    "validationMessage": "Port number should be between 0 to 65535"
                                 }
                             },
                             {
@@ -644,7 +648,9 @@
                                 "type": "Microsoft.Common.TextBox",
                                 "label": "DB2 database tablespace name",
                                 "constraints": {
-                                    "required": false
+                                    "required": false,
+                                    "regex": "^(?!.*[\"$]).{1,255}$",
+                                    "validationMessage": "Double quote(\") and dollar($) is not allowed"
                                 },
                                 "visible": "[equals(steps('databaseConfiguration').databaseExistingType, 'db2')]"
                             }
@@ -663,7 +669,9 @@
                                 "defaultValue": "",
                                 "toolTip": "Database user needed for communication between Domain and Database",
                                 "constraints": {
-                                    "required": true
+                                    "required": true,
+                                    "regex": "^(?!.*[\"$]).{1,255}$",
+                                    "validationMessage": "Double quote(\") and dollar($) is not allowed"
                                 }
                             },
                             {
@@ -674,7 +682,9 @@
                                     "confirmPassword": "Confirm Informatica domain DB password"
                                 },
                                 "constraints": {
-                                    "required": true
+                                    "required": true,
+                                    "regex": "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[^\\s\\w])(?!.*[\"$]).{8,123}$",
+                                    "validationMessage": "Password must be at least 8 characters in length. Should contain at least one special character, number, upper-case and lower-case character. Double quote(\") and dollar($) is not allowed"
                                 },
                                 "options": {
                                     "hideConfirmation": true
@@ -695,7 +705,9 @@
                                 "defaultValue": "",
                                 "toolTip": "Database user needed to create PowerCenter Repository metadata",
                                 "constraints": {
-                                    "required": true
+                                    "required": true,
+                                    "regex": "^(?!.*[\"$]).{1,255}$",
+                                    "validationMessage": "Double quote(\") and dollar($) is not allowed"
                                 }
                             },
                             {
@@ -704,13 +716,15 @@
                                 "label": {
                                     "password": "Informatica Repository DB password",
                                     "confirmPassword": "Confirm Informatica Repository DB password"
-                                 },
-                                 "constraints": {
-                                    "required": true
-                                 },
-                                 "options": {
+                                },
+                                "constraints": {
+                                    "required": true,
+                                    "regex": "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[^\\s\\w])(?!.*[\"$]).{8,123}$",
+                                    "validationMessage": "Password must be at least 8 characters in length. Should contain at least one special character, number, upper-case and lower-case character. Double quote(\") and dollar($) is not allowed"
+                                },
+                                "options": {
                                     "hideConfirmation": true
-                                 }
+                                }
                             }
                         ],
                         "visible": "[and(equals(steps('databaseConfiguration').databaseNewOrExisting, 'existing'), equals(steps('infaDomainConfiguration').domainServiceConfig.pcServiceCreateOrSkip, 'create'))]"
@@ -793,7 +807,7 @@
             "infaPCRSName": "[steps('infaDomainConfiguration').domainServiceConfig.pcRepositoryServiceName]",
             "infaPCISName": "[steps('infaDomainConfiguration').domainServiceConfig.pcIntegrationServiceName]",
             "infaDomainLicense": "[steps('infaDomainConfiguration').domainConfig.infaDomainLicense]",
-            
+
 
             "dbNewOrExisting": "[steps('databaseConfiguration').databaseNewOrExisting]",
             "dbVMName": "[coalesce(steps('databaseConfiguration').databaseConfig.databaseHostName, steps('databaseConfiguration').databaseExistingConfig.databaseExistingHostName)]",
