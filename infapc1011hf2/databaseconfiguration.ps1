@@ -97,8 +97,13 @@ Invoke-Command -Credential $credential -ComputerName $env:COMPUTERNAME -Argument
 		Param([String] $dbName)
 		$newDatabase = "CREATE DATABASE " + $dbName + " ON ( NAME = " + $dbName + "_dat, FILENAME = 'C:\SQL_DATA\" + $dbName +".mdf', SIZE = 10MB, MAXSIZE = 1000MB, FILEGROWTH = 5MB ) LOG ON ( NAME = " + $dbName + "_log, FILENAME = 'C:\SQL_DATA\" + $dbName + "log.ldf', SIZE = 5MB, MAXSIZE = 500MB, FILEGROWTH = 5MB )"	
 
+		$databaseSetting = "ALTER DATABASE " + $dbName + " SET READ_COMMITTED_SNAPSHOT ON" 
+
 		writeLog "Creating database: $dbName"
 		executeStatement $newDatabase master
+
+		writeLog "Setting database READ_COMMITTED_SNAPSHOT to ON"
+		executeStatement $databaseSetting $dbName
 	}
 
 	function createDatabaseUser {
