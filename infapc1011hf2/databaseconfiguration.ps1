@@ -11,7 +11,7 @@
 #Debug
 #echo $osUsername $osPassword $dbUsername $dbPassword $dbName
 
-if ($pcrsDBUsername -eq 'skip' -and $pcrsDBPassword -eq 'skip') {
+if ($pcrsDBUsername -eq 'skip' -or $pcrsDBPassword -eq 'skip') {
 	$pcrsDBUsername = ""
 	$pcrsDBPassword = ""
 }

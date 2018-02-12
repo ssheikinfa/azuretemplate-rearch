@@ -216,7 +216,7 @@ if($infaLicense -ne "#_no_license_#") {
 
 # Creating PC services
 if($joinDomain -eq 0 ) {
-    if ($pcrsDBUsername -eq 'skip' -and $pcrsDBPassword -eq 'skip') {
+    if ($pcrsDBUsername -ne 'skip' -and $pcrsDBPassword -ne 'skip') {
 		echo "Creating PowerCenter services"
 
 	    switch -Wildcard ($dbType) {
