@@ -13,7 +13,7 @@
 )
 
 #Debug
-#echo $osUsername $osPassword $dbUsername $dbPassword $dbName
+echo $osUsername $osPassword $dbUsername $dbPassword $pcrsdbName $mrsdbName $cmsdbName $disdbName $satsdbName $tdmdbName
 
 
 Enable-PSRemoting -Force
@@ -24,9 +24,12 @@ Invoke-Command -Credential $credential -ComputerName $env:COMPUTERNAME -Argument
     (
         [string]$dbUsername,
         [string]$dbPassword,
-		[string]$pcrsDBUsername,
-		[string]$pcrsDBPassword,
-        [string]$dbName
+	[string]$pcrsdbName,
+	[string]$mrsdbName,
+        [string]$cmsdbName,
+	[string]$disdbName,
+	[string]$satsdbName,
+	[string]$tdmdbName
     )
 
     function writeLog {
