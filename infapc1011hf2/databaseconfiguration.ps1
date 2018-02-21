@@ -3,12 +3,12 @@
   [string]$osPassword,
   [string]$dbUsername,
   [string]$dbPassword,
-  [string]$pcrsdb,
-  [string]$mrsdb,
-  [string]$cmsdb,
-  [string]$disdb,
-  [string]$satsdb,
-  [string]$tdmdb
+  [string]$pcrsdbName,
+  [string]$mrsdbName,
+  [string]$cmsdbName,
+  [string]$disdbName,
+  [string]$satsdbName,
+  [string]$tdmdbName
   
 )
 
@@ -19,7 +19,7 @@
 Enable-PSRemoting -Force
 $credential = New-Object System.Management.Automation.PSCredential @(($env:COMPUTERNAME + "\" + $osUsername), (ConvertTo-SecureString -String $osPassword -AsPlainText -Force))
 
-Invoke-Command -Credential $credential -ComputerName $env:COMPUTERNAME -ArgumentList $dbUsername,$dbPassword,$pcrsdb,$mrsdb,$cmsdb,$disdb,$satsdb,$tdmdb -ScriptBlock {
+Invoke-Command -Credential $credential -ComputerName $env:COMPUTERNAME -ArgumentList $dbUsername,$dbPassword,$pcrsdbName,$mrsdbName,$cmsdbName,$disdbName,$satsdbName,$tdmdbName -ScriptBlock {
     Param 
     (
         [string]$dbUsername,
@@ -133,11 +133,11 @@ Invoke-Command -Credential $credential -ComputerName $env:COMPUTERNAME -Argument
     
 	waitTillDatabaseIsAlive master
 	createDatabaseUser $dbUsername $dbPassword
-	createDatabase $pcrsdb
-	createDatabase $mrsdb
-	createDatabase $cmsdb
-	createDatabase $disdb
-	createDatabase $satsdb
-	createDatabase $tdmdb
+	createDatabase $pcrsdbName
+	createDatabase $mrsdbName
+	createDatabase $cmsdbName
+	createDatabase $disdbName
+	createDatabase $satsdbName
+	createDatabase $tdmdbName
 	
 }
