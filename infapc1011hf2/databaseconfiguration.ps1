@@ -103,7 +103,7 @@ Invoke-Command -Credential $credential -ComputerName $env:COMPUTERNAME -Argument
 		$databaseSetting = "ALTER DATABASE " + $dbName + " SET READ_COMMITTED_SNAPSHOT ON" 
 
 		writeLog "Creating database: $dbName"
-		executeStatement $newDatabase master
+		executeStatement $newDatabase $dbUsername
 
 		writeLog "Setting database READ_COMMITTED_SNAPSHOT to ON"
 		executeStatement $databaseSetting $dbName
