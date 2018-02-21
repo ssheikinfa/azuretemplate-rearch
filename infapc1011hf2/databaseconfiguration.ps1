@@ -122,9 +122,32 @@ Invoke-Command -Credential $credential -ComputerName $env:COMPUTERNAME -Argument
 
 			writeLog "Creating db user: $dbUsername" 
 			executeStatement $newLogin master
-			executeStatement $newUser master
-			executeStatement $updateUserRole master
-			executeStatement $newSchema master
+			
+			executeStatement $newUser $pcrsdbName
+			executeStatement $updateUserRole $pcrsdbName
+			executeStatement $newSchema $pcrsdbName
+			
+			executeStatement $newUser $cmsdbName
+			executeStatement $updateUserRole $cmsdbName
+			executeStatement $newSchema $cmsdbName
+			
+			executeStatement $newUser $mrsdbName
+			executeStatement $updateUserRole $mrsdbName
+			executeStatement $newSchema $mrsdbName
+			
+			executeStatement $newUser $disdbName
+			executeStatement $updateUserRole $disdbName
+			executeStatement $newSchema $disdbName
+			
+			executeStatement $newUser $satsdbName
+			executeStatement $updateUserRole $satsdbName
+			executeStatement $newSchema $satsdbName
+			
+			executeStatement $newUser $tdmdbName
+			executeStatement $updateUserRole $tdmdbName
+			executeStatement $newSchema $tdmdbName
+			
+			
 		}
 	}
  
@@ -135,12 +158,13 @@ Invoke-Command -Credential $credential -ComputerName $env:COMPUTERNAME -Argument
     mkdir -Path C:\SQL_DATA
     
 	waitTillDatabaseIsAlive master
-	createDatabaseUser $dbUsername $dbPassword
 	createDatabase $pcrsdbName
 	createDatabase $mrsdbName
 	createDatabase $cmsdbName
 	createDatabase $disdbName
 	createDatabase $satsdbName
 	createDatabase $tdmdbName
+	createDatabaseUser $dbUsername $dbPassword
+	
 	
 }
