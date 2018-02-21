@@ -121,10 +121,10 @@ Invoke-Command -Credential $credential -ComputerName $env:COMPUTERNAME -Argument
 			$newSchema = "CREATE SCHEMA """ + $dbUsername + """ AUTHORIZATION """ + $dbUsername + """"
 
 			writeLog "Creating db user: $dbUsername" 
-			executeStatement $newLogin $dbName
-			executeStatement $newUser $dbName
-			executeStatement $updateUserRole $dbName
-			executeStatement $newSchema $dbName
+			executeStatement $newLogin master
+			executeStatement $newUser master
+			executeStatement $updateUserRole master
+			executeStatement $newSchema master
 		}
 	}
  
