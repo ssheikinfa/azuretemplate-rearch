@@ -103,7 +103,7 @@ Invoke-Command -Credential $credential -ComputerName $env:COMPUTERNAME -Argument
 		$databaseSetting = "ALTER DATABASE " + $dbName + " SET READ_COMMITTED_SNAPSHOT ON" 
 
 		writeLog "Creating database: $dbName"
-		executeStatement $newDatabase $dbUsername
+		executeStatement $newDatabase master
 
 		writeLog "Setting database READ_COMMITTED_SNAPSHOT to ON"
 		executeStatement $databaseSetting $dbName
@@ -121,19 +121,19 @@ Invoke-Command -Credential $credential -ComputerName $env:COMPUTERNAME -Argument
 			$newSchema = "CREATE SCHEMA """ + $dbUsername + """ AUTHORIZATION """ + $dbUsername + """"
 
 			writeLog "Creating db user: $dbUsername" 
-			executeStatement $newLogin master
+			executeStatement $newLogin $pcrsdbName
 			
 			executeStatement $newUser $pcrsdbName
 			executeStatement $updateUserRole $pcrsdbName
 			executeStatement $newSchema $pcrsdbName
 			
-			executeStatement $newUser $cmsdbName
-			executeStatement $updateUserRole $cmsdbName
-			executeStatement $newSchema $cmsdbName
-			
 			executeStatement $newUser $mrsdbName
 			executeStatement $updateUserRole $mrsdbName
 			executeStatement $newSchema $mrsdbName
+			
+			executeStatement $newUser $cmsdbName
+			executeStatement $updateUserRole $cmsdbName
+			executeStatement $newSchema $cmsdbName
 			
 			executeStatement $newUser $disdbName
 			executeStatement $updateUserRole $disdbName
@@ -146,7 +146,7 @@ Invoke-Command -Credential $credential -ComputerName $env:COMPUTERNAME -Argument
 			executeStatement $newUser $tdmdbName
 			executeStatement $updateUserRole $tdmdbName
 			executeStatement $newSchema $tdmdbName
-			
+				
 			
 		}
 	}
